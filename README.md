@@ -73,10 +73,10 @@ Important:
 The same variables can be added from the Vercel CLI if preferred:
 
 ```sh
-vercel env add HIRONO_ACCESS_PASSCODE production
-vercel env add HIRONO_SESSION_SECRET production
+vercel env add HIRONO_ACCESS_PASSCODE production --sensitive
+vercel env add HIRONO_SESSION_SECRET production --sensitive
 vercel env add SUPABASE_URL production
-vercel env add SUPABASE_SECRET_KEY production
+vercel env add SUPABASE_SECRET_KEY production --sensitive
 ```
 
 Each command prompts for the value without adding it to Git.
