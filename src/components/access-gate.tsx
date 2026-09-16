@@ -34,18 +34,18 @@ export function AccessGate() {
         <div className="w-full max-w-lg">
           <div className="mb-16 flex items-center gap-3">
             <span className="grid size-10 place-items-center bg-primary text-white"><span className="pixel-label text-[10px]">H</span></span>
-            <span className="pixel-label text-lg">HIRONO</span>
+            <span className="text-lg font-black">Your Hirono</span>
           </div>
-          <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.14em] text-primary">Private collection</p>
+          <p className="mb-5 text-[10px] font-bold uppercase text-primary">Private collection</p>
           <h1 className="display-xl max-w-xl">Our little archive.</h1>
         </div>
       </section>
 
       <section className="flex items-center px-5 py-14 md:px-12 lg:px-[8vw]">
         <form onSubmit={unlock} className="w-full max-w-md" aria-describedby={error ? "passcode-error" : undefined}>
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-secondary">Welcome back</p>
+          <p className="text-[10px] font-bold uppercase text-secondary">Welcome back</p>
           <h2 className="mt-3 display-sm">Unlock the collection</h2>
-          <label htmlFor="archive-passcode" className="mt-10 block text-[10px] font-bold uppercase tracking-[0.1em] text-secondary">Passcode</label>
+          <label htmlFor="archive-passcode" className="mt-10 block text-[10px] font-bold uppercase text-secondary">Passcode</label>
           <input
             id="archive-passcode"
             type="password"
@@ -59,7 +59,7 @@ export function AccessGate() {
           <div className="mt-3 min-h-5" aria-live="polite">
             {error && <p id="passcode-error" className="text-xs font-medium text-error">{error}</p>}
           </div>
-          <button type="submit" disabled={submitting || !passcode} className="chunky-button mt-5 h-14 w-full border-black bg-black px-6 text-xs font-bold uppercase tracking-[0.1em] text-white hover:bg-primary">
+          <button type="submit" disabled={submitting || !passcode} className="chunky-button mt-5 h-14 w-full border-black bg-black px-6 text-xs font-bold uppercase text-white hover:bg-primary">
             {submitting ? "Unlocking…" : "Enter archive"}
           </button>
           <p className="mt-5 text-xs leading-5 text-secondary">This device will stay unlocked for 30 days.</p>

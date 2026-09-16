@@ -41,7 +41,7 @@ function ArtworkPlaceholder({ name }: { name: string }) {
   return (
     <span className="absolute inset-0 grid place-items-center bg-surface px-4 text-center">
       <span>
-        <span className="block text-[10px] font-medium uppercase tracking-[0.14em] text-mute">HIRONO</span>
+        <span className="block text-[10px] font-medium uppercase text-mute">Your Hirono</span>
         <span className="mt-1 block text-xs text-secondary">Image unavailable</span>
         <span className="sr-only"> for {name}</span>
       </span>
@@ -110,7 +110,7 @@ function FilterPill({ active, children, onClick }: { active: boolean; children: 
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`chunky-button flex h-11 min-w-[92px] shrink-0 items-center justify-center px-4 text-[11px] uppercase tracking-[0.08em] ${
+      className={`chunky-button flex h-11 min-w-[92px] shrink-0 items-center justify-center px-4 text-[11px] uppercase ${
         active ? "border-ink bg-ink text-white" : "border-hairline-strong bg-white text-body hover:border-ink"
       }`}
     >
@@ -185,7 +185,7 @@ function ItemCard({ item, owned, disabled, pending, onToggle }: {
         owned ? "border-ink" : "group-hover:border-hairline-strong"
       }`}>
         {item.rarity !== "standard" && (
-          <span className="absolute left-0 top-0 z-10 bg-ink px-2 py-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-white">
+          <span className="absolute left-0 top-0 z-10 bg-ink px-2 py-1.5 text-[9px] font-bold uppercase text-white">
             {item.rarity === "secret" ? "✦ Secret" : "Special"}
           </span>
         )}
@@ -200,7 +200,6 @@ function ItemCard({ item, owned, disabled, pending, onToggle }: {
         </span>
       </span>
       <span className="mt-3 block truncate text-xs font-semibold text-ink">{item.name}</span>
-      <span className={`mt-1 block text-[10px] font-medium uppercase tracking-[0.08em] ${owned ? "text-primary" : "text-mute"}`}>{pending ? "Saving…" : owned ? "Collected" : disabled ? "Coming soon" : "Not collected"}</span>
     </button>
   );
 }
@@ -234,9 +233,9 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
           <ReleaseCover release={release} />
         </span>
         <span className="min-w-0 self-center">
-          <span className="mb-2 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase tracking-[0.08em] text-secondary">
+          <span className="mb-2 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase text-secondary">
             <span>{release.type}</span><span aria-hidden="true">·</span><time dateTime={release.releaseDate}>{formatDate(release.releaseDate)}</time>
-            {release.collaboration && <span className="border border-hairline-strong bg-white px-2 py-1 text-[9px] font-bold">Collaboration</span>}
+            {release.collaboration && <span className="bg-secondary px-2 py-1 text-[9px] font-bold text-white">Collaboration</span>}
             {upcoming && <span className="bg-primary px-2 py-1 text-[9px] font-bold text-white">Coming soon</span>}
           </span>
           <h3 className="title-text text-pretty">{release.name}</h3>
@@ -249,8 +248,8 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
           <span className="progress-track block" aria-hidden="true">
             <span className="progress-fill block transition-[width] duration-300 ease-museum" style={{ width: `${upcoming ? 0 : percent}%` }} />
           </span>
-          <span className="mt-3 flex items-center justify-end gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink">
-            {open ? "Close collection" : "View collection"}
+          <span className="mt-3 flex items-center justify-end gap-1 text-[10px] font-semibold uppercase text-ink">
+            {open ? "Collapse" : "Expand"}
             <Icon name="chevron" className={`size-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
           </span>
         </span>
@@ -259,8 +258,8 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
       {open && (
         <div id={`release-${release.id}`} className="mt-8 border-t border-hairline pt-6 md:ml-[212px] md:mt-10 md:pt-8">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
-            <div className="flex items-center gap-4 text-[10px] font-semibold uppercase tracking-[0.08em]">
+            <p className="text-[10px] font-medium uppercase text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
+            <div className="flex items-center gap-4 text-[10px] font-semibold uppercase">
               {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">Product source</a>}
               {ownedCount > 0 && !upcoming && <button type="button" onClick={onClear} className="text-secondary hover:text-error">Clear release</button>}
             </div>
@@ -482,22 +481,11 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
       <a href="#catalog" className="chunky-button fixed left-4 top-4 z-50 -translate-y-24 bg-white px-4 py-3 text-xs text-ink focus:translate-y-0">Skip to collection</a>
       <header className="sticky top-0 z-40 bg-white">
         <nav className="border-b border-hairline" aria-label="Primary navigation">
-          <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:px-8">
-            <a href="#top" className="flex items-center gap-3" aria-label="HIRONO collection home">
+          <div className="mx-auto flex h-16 max-w-[1280px] items-center px-5 md:px-8">
+            <a href="#top" className="flex items-center gap-3" aria-label="Your Hirono home">
               <span className="grid size-9 place-items-center bg-primary text-white"><span className="pixel-label text-[10px]">H</span></span>
-              <span className="pixel-label block text-base leading-none text-ink">HIRONO</span>
+              <span className="block text-base font-black leading-none text-ink">Your Hirono</span>
             </a>
-            <div className="hidden h-full items-center gap-7 lg:flex">
-              <a href="#catalog" onClick={() => setCategory("all")} className="flex h-full items-center text-[10px] font-bold uppercase tracking-[0.08em] hover:text-primary">All releases</a>
-              <a href="#catalog" onClick={() => setCategory("figures")} className="flex h-full items-center text-[10px] font-bold uppercase tracking-[0.08em] hover:text-primary">Figures</a>
-              <a href="#catalog" onClick={() => setCategory("plush")} className="flex h-full items-center text-[10px] font-bold uppercase tracking-[0.08em] hover:text-primary">Plush</a>
-              <a href="#catalog" onClick={() => setCategory("accessories")} className="flex h-full items-center text-[10px] font-bold uppercase tracking-[0.08em] hover:text-primary">Accessories</a>
-              <a href="#catalog" onClick={() => setCategory("collaborations")} className="flex h-full items-center text-[10px] font-bold uppercase tracking-[0.08em] hover:text-primary">Collaborations</a>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.08em] text-secondary sm:block">Collection {ownedCount}/{total}</span>
-              <button type="button" onClick={lockArchive} className="h-11 px-2 text-[10px] font-bold uppercase tracking-[0.08em] text-secondary hover:text-ink">Lock</button>
-            </div>
           </div>
         </nav>
       </header>
@@ -506,7 +494,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         <section className="border-y border-hairline bg-canvas-soft">
           <div className="mx-auto grid max-w-[1280px] gap-8 px-5 py-12 md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-16">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-secondary">Your collection</p>
+              <p className="text-[10px] font-bold uppercase text-secondary">Your collection</p>
               <div className="mt-2 flex items-end gap-4">
                 <p className="display-lg tabular-nums">{ownedCount}<span className="text-mute">/{total}</span></p>
                 <p className="mb-1 text-xs text-secondary">collectibles found</p>
@@ -542,7 +530,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                 onClick={() => setFiltersOpen((current) => !current)}
                 aria-expanded={filtersOpen}
                 aria-controls="mobile-filters"
-                className={`chunky-button flex h-11 shrink-0 items-center gap-2 px-4 text-[10px] uppercase tracking-[0.08em] xl:hidden ${filtersOpen ? "bg-ink text-white" : "bg-white text-ink"}`}
+                className={`chunky-button flex h-11 shrink-0 items-center gap-2 px-4 text-[10px] uppercase xl:hidden ${filtersOpen ? "bg-ink text-white" : "bg-white text-ink"}`}
               >
                 <Icon name="filter" />
                 {filtersOpen ? "Done" : "Filters"}
@@ -560,24 +548,24 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
               <div id="mobile-filters" className="mt-3 w-full min-w-0 overflow-hidden border-t border-hairline pt-3 xl:hidden">
                 <div className="grid min-w-0 gap-5 overflow-hidden">
                   <div className="min-w-0">
-                    <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.1em] text-mute">Product type</p>
+                    <p className="mb-2 text-[9px] font-bold uppercase text-mute">Product type</p>
                     <FilterRail label="Filter by collection type">
                       {categoryOptions.map((option) => <FilterPill key={option.value} active={category === option.value} onClick={() => setCategory(option.value)}>{option.label}</FilterPill>)}
                     </FilterRail>
                   </div>
                   <div className="min-w-0">
-                    <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.1em] text-mute">Ownership</p>
+                    <p className="mb-2 text-[9px] font-bold uppercase text-mute">Ownership</p>
                     <FilterRail label="Filter by ownership">
                       {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
                     </FilterRail>
                   </div>
-                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="h-11 justify-self-start px-2 text-[9px] font-bold uppercase tracking-[0.08em] text-primary">Clear filters</button>}
+                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="h-11 justify-self-start px-2 text-[9px] font-bold uppercase text-primary">Clear filters</button>}
                 </div>
               </div>
             )}
           </div>
 
-          <div className="mb-10 flex items-center justify-between text-[10px] font-medium uppercase tracking-[0.08em] text-secondary">
+          <div className="mb-10 flex items-center justify-between text-[10px] font-medium uppercase text-secondary">
             <p>{visibleReleases.length} releases · {shownItems} collectibles</p>
             {!filtersActive && <button type="button" onClick={() => {
               const allOpen = visibleReleases.every((release) => expanded.has(release.id));
@@ -616,7 +604,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
             </section>
           )) : (
             <div className="grid min-h-80 place-items-center border border-hairline p-8 text-center">
-              <div><p className="text-2xl">· ᴗ ·</p><h2 className="mt-4 title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase tracking-[0.08em] text-white">Clear filters</button></div>
+              <div><p className="text-2xl">· ᴗ ·</p><h2 className="mt-4 title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-white">Clear filters</button></div>
             </div>
           )}
         </section>
@@ -624,19 +612,19 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
 
       <footer className="bg-black text-white">
         <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-14 md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-20">
-          <div><p className="pixel-label text-[11px]">HIRONO</p><p className="mt-4 max-w-md text-xs leading-5 text-white/60">One shared collection, synced securely across your devices.</p></div>
+          <div><p className="text-[11px] font-black">Your Hirono</p><p className="mt-4 max-w-md text-xs leading-5 text-white/60">One shared collection, synced securely across your devices.</p></div>
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase tracking-[0.08em] text-white hover:bg-white hover:text-black">Lock archive</button>
-            <button type="button" onClick={reset} className="chunky-button h-11 border-primary bg-primary px-4 text-[10px] uppercase tracking-[0.08em] text-white">Reset</button>
+            <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase text-white hover:bg-white hover:text-black">Lock archive</button>
+            <button type="button" onClick={reset} className="chunky-button h-11 border-primary bg-primary px-4 text-[10px] uppercase text-white">Reset</button>
           </div>
-          <p className="border-t border-white/20 pt-6 text-[9px] uppercase tracking-[0.08em] text-white/40 md:col-span-2">Personal collector tool. HIRONO, POP MART and official product imagery belong to their respective owners.</p>
+          <p className="border-t border-white/20 pt-6 text-[9px] uppercase text-white/40 md:col-span-2">Personal collector tool. HIRONO, POP MART and official product imagery belong to their respective owners.</p>
         </div>
       </footer>
 
       <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} className="m-auto w-[min(440px,calc(100%-40px))] border border-ink bg-white p-0 text-ink">
         {confirmation && <div className="p-6 md:p-8">
           <button type="button" onClick={() => setConfirmation(null)} aria-label="Close dialog" className="absolute right-4 top-4 grid size-11 place-items-center border border-hairline bg-white hover:border-ink"><Icon name="x" /></button>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">Please confirm</p>
+          <p className="text-[10px] font-semibold uppercase text-primary">Please confirm</p>
           <h2 className="mt-4 display-sm pr-8">{confirmation.title}</h2>
           <p className="mt-4 text-sm leading-5 text-secondary">{confirmation.body}</p>
           <div className="mt-8 grid grid-cols-2 gap-2">

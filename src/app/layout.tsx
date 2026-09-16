@@ -6,7 +6,7 @@ import "@fontsource/barlow/900.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HIRONO — Little Collection Museum",
+  title: "Your Hirono",
   description: "A private, visual collection tracker for HIRONO figures, plush, pendants and accessories.",
   robots: { index: false, follow: false },
 };

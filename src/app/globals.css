@@ -117,7 +117,7 @@ button:disabled { cursor: default; }
 .pixel-label {
   font-family: Barlow, Arial, Helvetica, system-ui, sans-serif;
   font-weight: 900;
-  letter-spacing: -0.045em;
+  letter-spacing: normal;
   text-transform: uppercase;
 }
 
@@ -147,7 +147,7 @@ button:disabled { cursor: default; }
   border: 1px solid var(--ink);
   border-radius: 0;
   font-weight: 650;
-  letter-spacing: 0.02em;
+  letter-spacing: normal;
   touch-action: manipulation;
   user-select: none;
   -webkit-tap-highlight-color: transparent;

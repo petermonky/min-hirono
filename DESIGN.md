@@ -1,10 +1,10 @@
-# HIRONO storefront archive design language
+# Your Hirono storefront archive design language
 
 Version: 2.0
 Source influence: POP MART retail storefront
 Reference: https://www.popmart.com/sg
 
-This is the visual contract for the HIRONO Collection Tracker. It translates POP MART's crisp merchandising language into a personal archive: white retail canvas, black navigation and campaign surfaces, compact uppercase labels, clean product grids, square image stages, restrained red accents and generous sectional spacing.
+This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: white retail canvas, black navigation and campaign surfaces, compact uppercase labels, clean product grids, square image stages, restrained red accents and generous sectional spacing.
 
 The app must remain clearly branded as an independent HIRONO collection tracker. Do not reproduce POP MART logos, commerce copy, prices or checkout patterns.
 
@@ -72,8 +72,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Header
 
 - Use a single 64px white navigation row with a thin lower divider.
-- The HIRONO mark is left-aligned; compact uppercase archive links occupy the desktop center.
-- Collection progress and a small lock action sit at the right.
+- The Your Hirono mark is left-aligned and is the only header content.
 - On mobile, remove center navigation before reducing touch targets.
 
 ### Access gate
@@ -103,8 +102,9 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Releases are sections divided by hairlines, not floating cards.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
 - Missing items retain 70% image opacity; avoid grayscale.
-- Owned items use a red check block, a visible border and explicit `Collected` text.
+- Owned items use a red check block and visible border. Missing items use the empty checkbox; secondary status captions are omitted.
 - Secrets use a compact black label and remain fully visible.
+- Collaboration badges use a gray fill with white text. Product type always describes the object itself rather than using `Collaboration` as a type.
 
 ### Progress
 

@@ -1,4 +1,4 @@
-# HIRONO Collection Tracker
+# Your Hirono
 
 A private, shared HIRONO collection tracker built with Next.js, Tailwind CSS and Supabase.
 
