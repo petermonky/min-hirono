@@ -114,8 +114,9 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Footer and dialogs
 
-- The footer is black with white utility actions and low-contrast legal copy.
+- The footer is a compact black row containing only the Your Hirono name and the lock/reset actions.
 - Dialogs are flat white rectangles with a 1px black border and no shadow treatment.
+- Confirmation dialogs begin directly with the action title; do not add an eyebrow label above it.
 
 ## Responsive layout
 

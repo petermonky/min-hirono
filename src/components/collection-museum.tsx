@@ -611,21 +611,19 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
       </main>
 
       <footer className="bg-black text-white">
-        <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-14 md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-20">
-          <div><p className="text-[11px] font-black">Your Hirono</p><p className="mt-4 max-w-md text-xs leading-5 text-white/60">One shared collection, synced securely across your devices.</p></div>
+        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-5 px-5 py-10 md:px-8">
+          <p className="text-[11px] font-black">Your Hirono</p>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase text-white hover:bg-white hover:text-black">Lock archive</button>
             <button type="button" onClick={reset} className="chunky-button h-11 border-primary bg-primary px-4 text-[10px] uppercase text-white">Reset</button>
           </div>
-          <p className="border-t border-white/20 pt-6 text-[9px] uppercase text-white/40 md:col-span-2">Personal collector tool. HIRONO, POP MART and official product imagery belong to their respective owners.</p>
         </div>
       </footer>
 
       <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} className="m-auto w-[min(440px,calc(100%-40px))] border border-ink bg-white p-0 text-ink">
         {confirmation && <div className="p-6 md:p-8">
           <button type="button" onClick={() => setConfirmation(null)} aria-label="Close dialog" className="absolute right-4 top-4 grid size-11 place-items-center border border-hairline bg-white hover:border-ink"><Icon name="x" /></button>
-          <p className="text-[10px] font-semibold uppercase text-primary">Please confirm</p>
-          <h2 className="mt-4 display-sm pr-8">{confirmation.title}</h2>
+          <h2 className="display-sm pr-8">{confirmation.title}</h2>
           <p className="mt-4 text-sm leading-5 text-secondary">{confirmation.body}</p>
           <div className="mt-8 grid grid-cols-2 gap-2">
             <button type="button" onClick={() => setConfirmation(null)} className="chunky-button h-11 bg-white text-xs hover:bg-surface-hover">Keep it</button>
