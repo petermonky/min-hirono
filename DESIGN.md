@@ -77,7 +77,8 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Access gate
 
-- The private archive opens with a two-panel passcode gate: black editorial branding and a focused white form surface.
+- The private archive opens with a single centered passcode form on the light canvas.
+- `Your Hirono` is the only heading; omit welcome copy, promotional panels and session-duration notes.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
 
