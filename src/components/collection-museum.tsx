@@ -221,7 +221,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
   const complete = !upcoming && percent === 100;
 
   return (
-    <article id={`release-card-${release.id}`} className="release-block mb-14 border-t border-hairline pt-6 md:mb-20 md:pt-8">
+    <article id={`release-card-${release.id}`} className="release-block border-t border-hairline py-6 md:py-8">
       <button
         type="button"
         onClick={onToggleOpen}
@@ -255,23 +255,25 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
         </span>
       </button>
 
-      {open && (
-        <div id={`release-${release.id}`} className="mt-8 border-t border-hairline pt-6 md:ml-[212px] md:mt-10 md:pt-8">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[10px] font-medium uppercase text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
-            <div className="flex items-center gap-4 text-[10px] font-semibold uppercase">
-              {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">Product source</a>}
-              {ownedCount > 0 && !upcoming && <button type="button" onClick={onClear} className="text-secondary hover:text-error">Clear release</button>}
+      <div id={`release-${release.id}`} className="release-panel md:ml-[212px]" data-open={open} inert={!open} aria-hidden={!open}>
+        <div className="release-panel-inner">
+          <div className="border-t border-hairline pt-6 md:pt-8">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[10px] font-medium uppercase text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
+              <div className="flex items-center gap-4 text-[10px] font-semibold uppercase">
+                {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">Product source</a>}
+                {ownedCount > 0 && !upcoming && <button type="button" onClick={onClear} className="text-secondary hover:text-error">Clear release</button>}
+              </div>
             </div>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+              {visibleItems.map((item) => (
+                <ItemCard key={item.id} item={item} owned={owned.has(item.id)} disabled={upcoming} pending={pendingItemIds.has(item.id)} onToggle={onToggleItem} />
+              ))}
+            </div>
+            {filteredOpen && <p className="mt-8 border-t border-hairline pt-4 text-xs text-mute">This release is expanded while filters are active.</p>}
           </div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-            {visibleItems.map((item) => (
-              <ItemCard key={item.id} item={item} owned={owned.has(item.id)} disabled={upcoming} pending={pendingItemIds.has(item.id)} onToggle={onToggleItem} />
-            ))}
-          </div>
-          {filteredOpen && <p className="mt-8 border-t border-hairline pt-4 text-xs text-mute">This release is expanded while filters are active.</p>}
         </div>
-      )}
+      </div>
     </article>
   );
 }
@@ -577,7 +579,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
 
           {yearGroups.length ? yearGroups.map(([year, yearReleases]) => (
             <section key={year} className="grid gap-6 py-8 first:pt-0 md:grid-cols-[74px_1fr] md:gap-10">
-              <div><h2 className="sticky top-56 border-t-2 border-ink pt-3 text-center text-sm font-bold tabular-nums">{year}</h2></div>
+              <div><h2 className="sticky top-56 border-t border-ink pt-3 text-center text-sm font-bold tabular-nums">{year}</h2></div>
               <div>
                 {yearReleases.map((release) => {
                   const filteredOpen = Boolean(query) || ownership !== "all";

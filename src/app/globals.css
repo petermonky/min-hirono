@@ -172,6 +172,32 @@ button:disabled { cursor: default; }
 
 .release-block { scroll-margin-top: 132px; }
 
+.release-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  opacity: 0;
+  transition:
+    grid-template-rows 280ms var(--motion-easing),
+    margin-top 280ms var(--motion-easing),
+    opacity 180ms var(--motion-easing);
+}
+
+.release-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  margin-top: 32px;
+  opacity: 1;
+}
+
+.release-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .release-panel[data-open="true"] { margin-top: 40px; }
+}
+
 .collectible-frame {
   border: 1px solid transparent;
   border-radius: 0;
