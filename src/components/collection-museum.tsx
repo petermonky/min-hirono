@@ -221,7 +221,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
   const complete = !upcoming && percent === 100;
 
   return (
-    <article id={`release-card-${release.id}`} className="release-block border-t border-hairline py-6 md:py-8">
+    <article id={`release-card-${release.id}`} className="release-block border-t border-hairline py-8">
       <button
         type="button"
         onClick={onToggleOpen}
@@ -257,7 +257,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
 
       <div id={`release-${release.id}`} className="release-panel md:ml-[212px]" data-open={open} inert={!open} aria-hidden={!open}>
         <div className="release-panel-inner">
-          <div className="border-t border-hairline pt-6 md:pt-8">
+          <div className="border-t border-hairline pt-8">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <p className="text-[10px] font-medium uppercase text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
               <div className="flex items-center gap-4 text-[10px] font-semibold uppercase">

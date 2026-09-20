@@ -101,7 +101,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Release and collectible cards
 
 - Releases are sections divided by hairlines, not floating cards.
-- Use equal padding above and below every collapsed release summary; the top spacing is the source of truth.
+- Use 32px of equal padding above and below every collapsed release summary at every viewport size; the top spacing is the source of truth.
 - Expand and collapse the item panel with a quiet height-and-opacity transition.
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
