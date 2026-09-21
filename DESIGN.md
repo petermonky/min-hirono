@@ -102,6 +102,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 - Releases are sections divided by hairlines, not floating cards.
 - Use 32px of equal padding above and below every collapsed release summary at every viewport size; the top spacing is the source of truth.
+- On compact layouts, center the release image against the full metadata-and-progress column so its visible top and bottom spacing remains balanced.
 - Expand and collapse the item panel with a quiet height-and-opacity transition.
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.

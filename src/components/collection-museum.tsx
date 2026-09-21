@@ -229,7 +229,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
         aria-controls={`release-${release.id}`}
         className="grid w-full grid-cols-[104px_1fr] gap-4 text-left md:grid-cols-[180px_minmax(0,1fr)_220px] md:gap-8"
       >
-        <span className="relative row-span-2 aspect-square overflow-hidden bg-canvas-soft md:row-span-1">
+        <span className="relative row-span-2 aspect-square self-center overflow-hidden bg-canvas-soft md:row-span-1">
           <ReleaseCover release={release} />
         </span>
         <span className="min-w-0 self-center">
