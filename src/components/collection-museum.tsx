@@ -227,7 +227,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
         onClick={onToggleOpen}
         aria-expanded={open}
         aria-controls={`release-${release.id}`}
-        className="grid w-full grid-cols-[120px_minmax(0,1fr)] gap-3 text-left md:grid-cols-[180px_minmax(0,1fr)_220px] md:gap-8"
+        className="grid w-full grid-cols-[120px_minmax(0,1fr)] gap-4 text-left md:grid-cols-[180px_minmax(0,1fr)_220px] md:gap-8"
       >
         <span className="relative row-span-2 aspect-square self-center overflow-hidden bg-canvas-soft md:row-span-1">
           <ReleaseCover release={release} />
