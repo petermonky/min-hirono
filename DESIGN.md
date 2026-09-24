@@ -95,6 +95,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Expanded mobile filter groups use identical vertical spacing and consistent minimum control widths. Rails scroll horizontally only. Dynamic white edge fades transition over 180ms and appear only where additional options remain off-screen.
 - Desktop presents search, category and ownership controls in one horizontal toolbar—never two permanently visible rows.
 - Search fields and filter controls are rectangular with 1px borders.
+- Keep search input updates urgent while deferring catalog reconciliation; precompute normalized catalog text and avoid rerendering unchanged collectible cards.
 - Active filters are black with white type; inactive filters remain white.
 - Years are shown as compact ruled markers alongside the chronological release list.
 

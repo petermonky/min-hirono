@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { Category, CollectibleItem, Release } from "@/lib/catalog";
 
 const STORAGE_KEY = "hironoCollectionV2";
+const releaseDateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
 type OwnershipFilter = "all" | "owned" | "missing";
 type CategoryFilter = "all" | Category;
@@ -88,8 +89,7 @@ function ReleaseCover({ release }: { release: Release }) {
 }
 
 function formatDate(date: string) {
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" })
-    .format(new Date(`${date}T12:00:00`));
+  return releaseDateFormatter.format(new Date(`${date}T12:00:00`));
 }
 
 function parseOwned(raw: string | null, validIds: Set<string>) {
@@ -157,7 +157,7 @@ function FilterRail({ label, children }: { label: string; children: React.ReactN
   );
 }
 
-function ItemCard({ item, owned, disabled, pending, onToggle }: {
+const ItemCard = memo(function ItemCard({ item, owned, disabled, pending, onToggle }: {
   item: CollectibleItem;
   owned: boolean;
   disabled: boolean;
@@ -202,7 +202,7 @@ function ItemCard({ item, owned, disabled, pending, onToggle }: {
       <span className="mt-3 block truncate text-xs font-semibold text-ink">{item.name}</span>
     </button>
   );
-}
+});
 
 function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filteredOpen, onToggleOpen, onToggleItem, onClear }: {
   release: Release;
@@ -284,6 +284,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
   const [owned, setOwned] = useState(() => new Set(initialOwned.filter((id) => validIds.has(id))));
   const [pendingItemIds, setPendingItemIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [ownership, setOwnership] = useState<OwnershipFilter>("all");
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -365,7 +366,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
     return () => { cancelled = true; };
   }, [validIds]);
 
-  const toggleItem = (id: string) => {
+  const toggleItem = useCallback((id: string) => {
     if (pendingItemIds.has(id)) return;
     const shouldOwn = !owned.has(id);
     setOwned((current) => {
@@ -393,7 +394,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         return next;
       });
     });
-  };
+  }, [owned, pendingItemIds, refreshCollection, router]);
 
   const removeItems = async (itemIds?: string[]) => {
     const previous = new Set(owned);
@@ -428,21 +429,29 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
   const ownedCount = [...owned].filter((id) => validIds.has(id)).length;
   const overallPercent = Math.round((ownedCount / total) * 100) || 0;
 
+  const searchIndex = useMemo(() => new Map(releases.map((release) => [release.id, {
+    releaseText: [release.name, release.type, release.collaboration, release.description]
+      .filter(Boolean).join(" ").toLowerCase(),
+    itemText: new Map(release.items.map((item) => [item.id, item.name.toLowerCase()])),
+  }])), [releases]);
+
+  const normalizedQuery = deferredQuery.trim().toLowerCase();
+  const searchActive = Boolean(normalizedQuery);
+
   const visibleReleases = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
     return releases.flatMap((release) => {
       if (category !== "all" && release.category !== category) return [];
-      const releaseMatches = !normalizedQuery || [release.name, release.type, release.collaboration, release.description]
-        .filter(Boolean).join(" ").toLowerCase().includes(normalizedQuery);
+      const indexedRelease = searchIndex.get(release.id);
+      const releaseMatches = !normalizedQuery || indexedRelease?.releaseText.includes(normalizedQuery);
       const visibleItems = release.items.filter((item) => {
-        if (normalizedQuery && !releaseMatches && !item.name.toLowerCase().includes(normalizedQuery)) return false;
+        if (normalizedQuery && !releaseMatches && !indexedRelease?.itemText.get(item.id)?.includes(normalizedQuery)) return false;
         if (ownership === "owned" && !owned.has(item.id)) return false;
         if (ownership === "missing" && owned.has(item.id)) return false;
         return true;
       });
       return visibleItems.length ? [{ ...release, visibleItems }] : [];
     });
-  }, [category, owned, ownership, query, releases]);
+  }, [category, normalizedQuery, owned, ownership, releases, searchIndex]);
 
   const yearGroups = useMemo(() => {
     const groups = new Map<number, Array<Release & { visibleItems: CollectibleItem[] }>>();
@@ -450,7 +459,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
     return [...groups.entries()];
   }, [visibleReleases]);
 
-  const filtersActive = Boolean(query) || category !== "all" || ownership !== "all";
+  const filtersActive = searchActive || category !== "all" || ownership !== "all";
   const filterCount = Number(category !== "all") + Number(ownership !== "all");
   const shownItems = visibleReleases.reduce((sum, release) => sum + release.visibleItems.length, 0);
 
@@ -582,7 +591,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
               <div><h2 className="sticky top-56 border-t border-ink pt-3 text-center text-sm font-bold tabular-nums">{year}</h2></div>
               <div>
                 {yearReleases.map((release) => {
-                  const filteredOpen = Boolean(query) || ownership !== "all";
+                  const filteredOpen = searchActive || ownership !== "all";
                   const open = filteredOpen || expanded.has(release.id);
                   return <ReleaseCard
                     key={release.id}
