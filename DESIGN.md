@@ -73,12 +73,13 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 - Use a single 64px white navigation row with a thin lower divider.
 - The Your Hirono mark is left-aligned and is the only header content.
+- Use the isolated hand-drawn Hirono head as the product mark and favicon. Keep its exterior transparent and internal white fill opaque; never place it inside the former red `H` square.
 - On mobile, remove center navigation before reducing touch targets.
 
 ### Access gate
 
 - The private archive opens with a single centered passcode form on the light canvas.
-- `Your Hirono` is the only heading; omit welcome copy, promotional panels and session-duration notes.
+- The Hirono head appears directly left of `Your Hirono`, the only heading; omit welcome copy, promotional panels and session-duration notes.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
 

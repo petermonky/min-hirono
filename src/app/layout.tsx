@@ -8,6 +8,13 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Your Hirono",
   description: "A private, visual collection tracker for HIRONO figures, plush, pendants and accessories.",
+  icons: {
+    icon: [
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/hirono-head.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/brand/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   robots: { index: false, follow: false },
 };
 

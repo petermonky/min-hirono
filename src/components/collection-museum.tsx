@@ -494,7 +494,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         <nav className="border-b border-hairline" aria-label="Primary navigation">
           <div className="mx-auto flex h-16 max-w-[1280px] items-center px-5 md:px-8">
             <a href="#top" className="flex items-center gap-3" aria-label="Your Hirono home">
-              <span className="grid size-9 place-items-center bg-primary text-white"><span className="pixel-label text-[10px]">H</span></span>
+              <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
               <span className="block text-base font-black leading-none text-ink">Your Hirono</span>
             </a>
           </div>

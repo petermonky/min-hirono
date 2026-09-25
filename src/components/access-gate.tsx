@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +33,10 @@ export function AccessGate() {
     <main className="grid min-h-dvh place-items-center bg-canvas-soft px-5 py-14 md:px-12">
       <section className="w-full max-w-md">
         <form onSubmit={unlock} className="w-full max-w-md" aria-describedby={error ? "passcode-error" : undefined}>
-          <h1 className="display-sm">Your Hirono</h1>
+          <div className="flex items-center gap-4">
+            <Image src="/brand/hirono-head.png" alt="" width={48} height={48} className="size-12 object-contain" priority />
+            <h1 className="display-sm">Your Hirono</h1>
+          </div>
           <label htmlFor="archive-passcode" className="mt-10 block text-[10px] font-bold uppercase text-secondary">Passcode</label>
           <input
             id="archive-passcode"
