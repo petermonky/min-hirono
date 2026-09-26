@@ -4,17 +4,17 @@ Version: 2.0
 Source influence: POP MART retail storefront
 Reference: https://www.popmart.com/sg
 
-This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: white retail canvas, black navigation and campaign surfaces, compact uppercase labels, clean product grids, square image stages, restrained red accents and generous sectional spacing.
+This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: high-contrast retail canvases, black structural surfaces, compact uppercase labels, clean product grids, square image stages, baby-pink accents and generous sectional spacing.
 
 The app must remain clearly branded as an independent HIRONO collection tracker. Do not reproduce POP MART logos, commerce copy, prices or checkout patterns.
 
 ## Direction
 
 - Treat artwork as merchandise photography: large, square and visually dominant.
-- Use a bright white canvas with soft-gray product stages and almost no decorative container styling.
+- Use a bright white canvas with soft-gray product stages in light mode and a near-black canvas with charcoal stages in dark mode.
 - Black creates structure in the footer and active controls.
-- POP MART red is the interaction and progress accent. Baby pink remains a quiet HIRONO undertone in fallback and image surfaces, not the primary UI color.
-- Use centered uppercase section titles with a short red rule.
+- Baby pink is the interaction, progress and ownership accent. Reserve red for destructive and error states.
+- Use centered uppercase section titles with a short baby-pink rule.
 - Prefer thin dividers and spacing over rounded cards, shadows or tinted panels.
 - Keep controls compact and rectangular. No faux-3D button depth.
 - Preserve the chronological archive model even though its presentation resembles a storefront.
@@ -23,9 +23,9 @@ The app must remain clearly branded as an independent HIRONO collection tracker.
 
 ```yaml
 colors:
-  primary: "#E60012"
-  primaryStrong: "#B7000E"
-  onPrimary: "#FFFFFF"
+  primary: "#FFB6D2"
+  primaryStrong: "#A9436B"
+  onPrimary: "#111111"
   ink: "#111111"
   body: "#343434"
   secondary: "#666666"
@@ -38,6 +38,14 @@ colors:
   hironoPink: "#FFB6D2"
   focus: "#2563EB"
   error: "#C91524"
+
+darkMode:
+  canvas: "#101010"
+  canvasSoft: "#171717"
+  surface: "#1D1D1D"
+  ink: "#F4F4F4"
+  border: "#2D2D2D"
+  borderStrong: "#555555"
 
 typography:
   display:
@@ -71,14 +79,14 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Header
 
-- Use a single 64px white navigation row with a thin lower divider.
-- The Your Hirono mark is left-aligned and is the only header content.
+- Use a single 64px themed-canvas navigation row with a thin lower divider.
+- The Your Hirono mark is left-aligned; the theme toggle is the only action.
 - Use the isolated hand-drawn Hirono head as the product mark and favicon. Keep its exterior transparent and internal white fill opaque; never place it inside the former red `H` square.
 - On mobile, remove center navigation before reducing touch targets.
 
 ### Access gate
 
-- The private archive opens with a single centered passcode form on the light canvas.
+- The private archive opens with a single centered passcode form on the active theme canvas.
 - The Hirono head appears directly left of `Your Hirono`, the only heading; omit welcome copy, promotional panels and session-duration notes.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
@@ -110,20 +118,20 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
 - Missing items retain 70% image opacity; avoid grayscale.
-- Owned items use a red check block and visible border. Missing items use the empty checkbox; secondary status captions are omitted.
+- Owned items use a baby-pink check block with dark iconography and a visible border. Missing items use the empty checkbox; secondary status captions are omitted.
 - Secrets use a compact black label and remain fully visible.
 - Collaboration badges use a gray fill with white text. Product type always describes the object itself rather than using `Collaboration` as a type.
 
 ### Progress
 
-- Progress tracks are 4px high with a gray track and red fill.
+- Progress tracks are 4px high with a gray track and baby-pink fill.
 - Every bar is paired with exact counts and percentage text.
 - Completion never relies on color alone.
 
 ### Footer and dialogs
 
-- The footer is a compact black row containing only the Your Hirono name and the lock/reset actions.
-- Dialogs are flat white rectangles with a 1px black border and no shadow treatment.
+- The footer is a compact black row containing only the lock and reset actions, aligned to the right.
+- Dialogs are flat canvas-colored rectangles with a 1px high-contrast border and no shadow treatment.
 - Confirmation dialogs begin directly with the action title; do not add an eyebrow label above it.
 
 ## Responsive layout
@@ -136,9 +144,10 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ## Accessibility
 
-- Essential copy uses black or dark gray on white.
-- Red is always paired with labels, counts or checkmarks.
+- Essential copy maintains strong contrast on both the light and dark canvases.
+- Baby pink is always paired with labels, counts or checkmarks and uses near-black foreground content.
 - Keyboard focus uses a visible 2px blue outline.
 - Image fallback is plain centered text; never show broken-image browser UI.
 - Browser zoom remains functional.
 - Respect `prefers-reduced-motion`; interactions become effectively immediate.
+- Persist the chosen light/dark theme on the device, use the system preference on first visit, and transition theme colors over 240ms.

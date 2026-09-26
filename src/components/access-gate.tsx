@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function AccessGate() {
   const router = useRouter();
@@ -30,7 +31,8 @@ export function AccessGate() {
   };
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-canvas-soft px-5 py-14 md:px-12">
+    <main className="relative grid min-h-dvh place-items-center bg-canvas-soft px-5 py-14 md:px-12">
+      <ThemeToggle className="absolute right-5 top-5 md:right-8 md:top-8" />
       <section className="w-full max-w-md">
         <form onSubmit={unlock} className="w-full max-w-md" aria-describedby={error ? "passcode-error" : undefined}>
           <div className="flex items-center gap-4">
@@ -46,12 +48,12 @@ export function AccessGate() {
             autoFocus
             value={passcode}
             onChange={(event) => setPasscode(event.target.value)}
-            className="mt-3 h-14 w-full border border-hairline-strong bg-white px-4 text-base outline-none transition-colors hover:border-ink focus:border-focus"
+            className="mt-3 h-14 w-full border border-hairline-strong bg-surface px-4 text-base outline-none transition-colors hover:border-ink focus:border-focus"
           />
           <div className="mt-3 min-h-5" aria-live="polite">
             {error && <p id="passcode-error" className="text-xs font-medium text-error">{error}</p>}
           </div>
-          <button type="submit" disabled={submitting || !passcode} className="chunky-button mt-5 h-14 w-full border-black bg-black px-6 text-xs font-bold uppercase text-white hover:bg-primary">
+          <button type="submit" disabled={submitting || !passcode} className="chunky-button mt-5 h-14 w-full border-ink bg-ink px-6 text-xs font-bold uppercase text-canvas hover:border-primary hover:bg-primary hover:text-on-primary">
             {submitting ? "Unlocking…" : "Enter archive"}
           </button>
         </form>

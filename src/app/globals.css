@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #e60012;
-  --primary-strong: #b7000e;
-  --on-primary: #ffffff;
+  --primary: #ffb6d2;
+  --primary-strong: #a9436b;
+  --on-primary: #111111;
   --ink: #111111;
   --body: #343434;
   --secondary: #666666;
@@ -19,12 +19,36 @@
   --image-warm-mid: #ffcadc;
   --image-warm-dark: #715c63;
   --focus: #2563eb;
-  --accent: #e60012;
+  --accent: #ffb6d2;
   --success: #177245;
   --warning: #9a5d00;
   --error: #c91524;
   --hirono-pink: #ffb6d2;
+  --progress-track: #dedede;
   --motion-easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root[data-theme="dark"] {
+  --primary-strong: #ffb6d2;
+  --ink: #f4f4f4;
+  --body: #d6d6d6;
+  --secondary: #adadad;
+  --mute: #8c8c8c;
+  --disabled: #696969;
+  --canvas: #101010;
+  --canvas-soft: #171717;
+  --surface: #1d1d1d;
+  --surface-hover: #272727;
+  --hairline: #2d2d2d;
+  --hairline-strong: #555555;
+  --image-warm-light: #32272b;
+  --image-warm-mid: #624b55;
+  --image-warm-dark: #b596a2;
+  --focus: #8ab4f8;
+  --success: #5ac98b;
+  --warning: #e0a24b;
+  --error: #ff707a;
+  --progress-track: #3a3a3a;
 }
 
 @theme inline {
@@ -74,10 +98,25 @@ body {
   font-weight: 400;
   line-height: 1.4;
 }
+
+html,
+body,
+header,
+nav,
+main,
+section,
+footer,
+dialog {
+  transition:
+    color 240ms var(--motion-easing),
+    background-color 240ms var(--motion-easing),
+    border-color 240ms var(--motion-easing);
+}
+
 button, input { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: default; }
-::selection { color: #fff; background: var(--primary); }
+::selection { color: var(--on-primary); background: var(--primary); }
 
 :focus-visible {
   outline: 2px solid var(--focus);
@@ -166,7 +205,7 @@ button:disabled { cursor: default; }
 .lesson-card {
   border: 1px solid var(--hairline);
   border-radius: 0;
-  background: #fff;
+  background: var(--surface);
   box-shadow: none;
 }
 
@@ -209,7 +248,7 @@ button:disabled { cursor: default; }
   overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: #dedede;
+  background: var(--progress-track);
   padding: 0;
 }
 
@@ -240,12 +279,12 @@ button:disabled { cursor: default; }
 
 .filter-rail-fade-left {
   left: 0;
-  background: linear-gradient(to right, #fff 18%, rgb(255 255 255 / 0));
+  background: linear-gradient(to right, var(--canvas) 18%, transparent);
 }
 
 .filter-rail-fade-right {
   right: 0;
-  background: linear-gradient(to left, #fff 18%, rgb(255 255 255 / 0));
+  background: linear-gradient(to left, var(--canvas) 18%, transparent);
 }
 
 .item-enter { animation: item-enter 180ms var(--motion-easing); }

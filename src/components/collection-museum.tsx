@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { KeyboardEvent, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { Category, CollectibleItem, Release } from "@/lib/catalog";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const STORAGE_KEY = "hironoCollectionV2";
 const releaseDateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
@@ -111,7 +112,7 @@ function FilterPill({ active, children, onClick }: { active: boolean; children: 
       onClick={onClick}
       aria-pressed={active}
       className={`chunky-button flex h-11 min-w-[92px] shrink-0 items-center justify-center px-4 text-[11px] uppercase ${
-        active ? "border-ink bg-ink text-white" : "border-hairline-strong bg-white text-body hover:border-ink"
+        active ? "border-ink bg-ink text-canvas" : "border-hairline-strong bg-surface text-body hover:border-ink"
       }`}
     >
       {children}
@@ -189,12 +190,12 @@ const ItemCard = memo(function ItemCard({ item, owned, disabled, pending, onTogg
             {item.rarity === "secret" ? "✦ Secret" : "Special"}
           </span>
         )}
-        {item.odds && <span className="absolute right-0 top-0 z-10 bg-white px-2 py-1.5 text-[9px] font-semibold text-secondary">{item.odds}</span>}
+        {item.odds && <span className="absolute right-0 top-0 z-10 bg-canvas px-2 py-1.5 text-[9px] font-semibold text-secondary">{item.odds}</span>}
         <span className={`store-grid-image absolute inset-0 transition-opacity duration-200 ${owned ? "opacity-100" : "opacity-70 group-hover:opacity-90"}`}>
           <MuseumImage item={item} sizes="(max-width: 640px) 44vw, (max-width: 1024px) 28vw, 190px" />
         </span>
         <span className={`absolute bottom-0 right-0 z-10 grid size-8 place-items-center border transition-colors duration-200 ${
-          owned ? "border-primary bg-primary text-white" : "border-hairline-strong bg-white text-transparent"
+          owned ? "border-primary bg-primary text-on-primary" : "border-hairline-strong bg-canvas text-transparent"
         }`} aria-hidden="true">
           <Icon name="check" className="size-4" />
         </span>
@@ -236,7 +237,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
           <span className="mb-2 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase text-secondary">
             <span>{release.type}</span><span aria-hidden="true">·</span><time dateTime={release.releaseDate}>{formatDate(release.releaseDate)}</time>
             {release.collaboration && <span className="bg-secondary px-2 py-1 text-[9px] font-bold text-white">Collaboration</span>}
-            {upcoming && <span className="bg-primary px-2 py-1 text-[9px] font-bold text-white">Coming soon</span>}
+            {upcoming && <span className="bg-primary px-2 py-1 text-[9px] font-bold text-on-primary">Coming soon</span>}
           </span>
           <h3 className="title-text text-pretty">{release.name}</h3>
         </span>
@@ -489,14 +490,18 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
 
   return (
     <>
-      <a href="#catalog" className="chunky-button fixed left-4 top-4 z-50 -translate-y-24 bg-white px-4 py-3 text-xs text-ink focus:translate-y-0">Skip to collection</a>
-      <header className="sticky top-0 z-40 bg-white">
+      <a href="#catalog" className="chunky-button fixed left-4 top-4 z-50 -translate-y-24 bg-canvas px-4 py-3 text-xs text-ink focus:translate-y-0">Skip to collection</a>
+      <header className="sticky top-0 z-40 bg-canvas">
         <nav className="border-b border-hairline" aria-label="Primary navigation">
-          <div className="mx-auto flex h-16 max-w-[1280px] items-center px-5 md:px-8">
-            <a href="#top" className="flex items-center gap-3" aria-label="Your Hirono home">
+          <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-5 md:px-8">
+            <a href="#top" onClick={(event) => {
+              event.preventDefault();
+              window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+            }} className="flex items-center gap-3" aria-label="Your Hirono home">
               <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
               <span className="block text-base font-black leading-none text-ink">Your Hirono</span>
             </a>
+            <ThemeToggle />
           </div>
         </nav>
       </header>
@@ -505,8 +510,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         <section className="border-y border-hairline bg-canvas-soft">
           <div className="mx-auto grid max-w-[1280px] gap-8 px-5 py-12 md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-16">
             <div>
-              <p className="text-[10px] font-bold uppercase text-secondary">Your collection</p>
-              <div className="mt-2 flex items-end gap-4">
+              <div className="flex items-end gap-4">
                 <p className="display-lg tabular-nums">{ownedCount}<span className="text-mute">/{total}</span></p>
                 <p className="mb-1 text-xs text-secondary">collectibles found</p>
               </div>
@@ -519,7 +523,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         </section>
 
         <section id="catalog" className="mx-auto max-w-[1280px] px-5 py-20 md:px-8 md:py-28">
-          <div className="sticky top-16 z-30 -mx-5 mb-14 border-y border-hairline bg-white/95 px-5 py-3 backdrop-blur-md md:mx-0 md:px-4">
+          <div className="sticky top-16 z-30 -mx-5 mb-14 border-y border-hairline bg-canvas/95 px-5 py-3 backdrop-blur-md md:mx-0 md:px-4">
             <div className="flex items-center gap-2">
               <div className="relative min-w-0 flex-1 xl:max-w-[360px]">
                 <Icon name="search" className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-secondary" />
@@ -532,7 +536,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                   onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => { if (event.key === "Escape") setQuery(""); }}
                   type="search"
                   placeholder="Search collection…"
-                  className="h-11 w-full border border-hairline-strong bg-white pl-12 pr-4 text-xs outline-none transition-colors placeholder:text-mute hover:border-ink focus:border-focus"
+                  className="h-11 w-full border border-hairline-strong bg-surface pl-12 pr-4 text-xs outline-none transition-colors placeholder:text-mute hover:border-ink focus:border-focus"
                 />
               </div>
 
@@ -541,11 +545,11 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                 onClick={() => setFiltersOpen((current) => !current)}
                 aria-expanded={filtersOpen}
                 aria-controls="mobile-filters"
-                className={`chunky-button flex h-11 shrink-0 items-center gap-2 px-4 text-[10px] uppercase xl:hidden ${filtersOpen ? "bg-ink text-white" : "bg-white text-ink"}`}
+                className={`chunky-button flex h-11 shrink-0 items-center gap-2 px-4 text-[10px] uppercase xl:hidden ${filtersOpen ? "bg-ink text-canvas" : "bg-surface text-ink"}`}
               >
                 <Icon name="filter" />
                 {filtersOpen ? "Done" : "Filters"}
-                {!filtersOpen && filterCount > 0 && <span className="grid size-5 place-items-center bg-primary text-[9px] text-white">{filterCount}</span>}
+                {!filtersOpen && filterCount > 0 && <span className="grid size-5 place-items-center bg-primary text-[9px] text-on-primary">{filterCount}</span>}
               </button>
 
               <div className="no-scrollbar ml-auto hidden items-center gap-2 overflow-x-auto xl:flex" aria-label="Catalog filters">
@@ -570,7 +574,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                       {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
                     </FilterRail>
                   </div>
-                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="h-11 justify-self-start px-2 text-[9px] font-bold uppercase text-primary">Clear filters</button>}
+                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="h-11 justify-self-start px-2 text-[9px] font-bold uppercase text-primary-strong">Clear filters</button>}
                 </div>
               </div>
             )}
@@ -615,35 +619,34 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
             </section>
           )) : (
             <div className="grid min-h-80 place-items-center border border-hairline p-8 text-center">
-              <div><p className="text-2xl">· ᴗ ·</p><h2 className="mt-4 title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-white">Clear filters</button></div>
+              <div><p className="text-2xl">· ᴗ ·</p><h2 className="mt-4 title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-on-primary">Clear filters</button></div>
             </div>
           )}
         </section>
       </main>
 
       <footer className="bg-black text-white">
-        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-5 px-5 py-10 md:px-8">
-          <p className="text-[11px] font-black">Your Hirono</p>
+        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-end gap-5 px-5 py-10 md:px-8">
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase text-white hover:bg-white hover:text-black">Lock archive</button>
-            <button type="button" onClick={reset} className="chunky-button h-11 border-primary bg-primary px-4 text-[10px] uppercase text-white">Reset</button>
+            <button type="button" onClick={reset} className="chunky-button h-11 border-primary bg-primary px-4 text-[10px] uppercase text-on-primary">Reset</button>
           </div>
         </div>
       </footer>
 
-      <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} className="m-auto w-[min(440px,calc(100%-40px))] border border-ink bg-white p-0 text-ink">
+      <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} className="m-auto w-[min(440px,calc(100%-40px))] border border-ink bg-canvas p-0 text-ink">
         {confirmation && <div className="p-6 md:p-8">
-          <button type="button" onClick={() => setConfirmation(null)} aria-label="Close dialog" className="absolute right-4 top-4 grid size-11 place-items-center border border-hairline bg-white hover:border-ink"><Icon name="x" /></button>
+          <button type="button" onClick={() => setConfirmation(null)} aria-label="Close dialog" className="absolute right-4 top-4 grid size-11 place-items-center border border-hairline bg-canvas hover:border-ink"><Icon name="x" /></button>
           <h2 className="display-sm pr-8">{confirmation.title}</h2>
           <p className="mt-4 text-sm leading-5 text-secondary">{confirmation.body}</p>
           <div className="mt-8 grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => setConfirmation(null)} className="chunky-button h-11 bg-white text-xs hover:bg-surface-hover">Keep it</button>
+            <button type="button" onClick={() => setConfirmation(null)} className="chunky-button h-11 bg-canvas text-xs hover:bg-surface-hover">Keep it</button>
             <button type="button" onClick={() => { confirmation.action(); setConfirmation(null); }} className="chunky-button h-11 border-error bg-error text-xs text-white">{confirmation.actionLabel}</button>
           </div>
         </div>}
       </dialog>
 
-      <div role="status" aria-live="polite" className={`fixed bottom-5 left-1/2 z-50 -translate-x-1/2 bg-black px-5 py-3 text-xs text-white transition-all duration-200 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}>{toast}</div>
+      <div role="status" aria-live="polite" className={`fixed bottom-5 left-1/2 z-50 -translate-x-1/2 bg-ink px-5 py-3 text-xs text-canvas transition-all duration-200 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}>{toast}</div>
     </>
   );
 }
