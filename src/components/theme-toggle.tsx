@@ -34,7 +34,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
         applyTheme(nextTheme);
         setTheme(nextTheme);
       }}
-      className={`chunky-button grid size-11 place-items-center border-hairline-strong bg-canvas text-ink hover:border-ink ${className}`}
+      className={`grid size-11 place-items-center bg-transparent text-ink transition-[color,opacity,transform] duration-200 hover:opacity-60 active:scale-95 ${className}`}
       aria-label={`Switch to ${dark ? "light" : "dark"} mode`}
       title={`Switch to ${dark ? "light" : "dark"} mode`}
     >

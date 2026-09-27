@@ -31,14 +31,12 @@ export function AccessGate() {
   };
 
   return (
-    <main className="relative grid min-h-dvh place-items-center bg-canvas-soft px-5 py-14 md:px-12">
+    <main className="relative grid min-h-dvh place-items-center bg-canvas px-5 py-14 md:px-12">
       <ThemeToggle className="absolute right-5 top-5 md:right-8 md:top-8" />
       <section className="w-full max-w-md">
         <form onSubmit={unlock} className="w-full max-w-md" aria-describedby={error ? "passcode-error" : undefined}>
-          <div className="flex items-center gap-4">
-            <Image src="/brand/hirono-head.png" alt="" width={48} height={48} className="size-12 object-contain" priority />
-            <h1 className="display-sm">Your Hirono</h1>
-          </div>
+          <h1 className="sr-only">Your Hirono</h1>
+          <Image src="/brand/hirono-head.png" alt="" width={112} height={112} className="mx-auto size-28 object-contain" priority />
           <label htmlFor="archive-passcode" className="mt-10 block text-[10px] font-bold uppercase text-secondary">Passcode</label>
           <input
             id="archive-passcode"

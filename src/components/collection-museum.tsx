@@ -493,15 +493,14 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
       <a href="#catalog" className="chunky-button fixed left-4 top-4 z-50 -translate-y-24 bg-canvas px-4 py-3 text-xs text-ink focus:translate-y-0">Skip to collection</a>
       <header className="sticky top-0 z-40 bg-canvas">
         <nav className="border-b border-hairline" aria-label="Primary navigation">
-          <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-5 md:px-8">
+          <div className="relative mx-auto flex h-16 max-w-[1280px] items-center justify-center px-5 md:px-8">
             <a href="#top" onClick={(event) => {
               event.preventDefault();
               window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-            }} className="flex items-center gap-3" aria-label="Your Hirono home">
-              <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
-              <span className="block text-base font-black leading-none text-ink">Your Hirono</span>
+            }} className="flex items-center" aria-label="Your Hirono home">
+              <Image src="/brand/hirono-head.png" alt="" width={48} height={48} className="size-12 object-contain" priority />
             </a>
-            <ThemeToggle />
+            <ThemeToggle className="absolute right-5 md:right-8" />
           </div>
         </nav>
       </header>

@@ -80,16 +80,22 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Header
 
 - Use a single 64px themed-canvas navigation row with a thin lower divider.
-- The Your Hirono mark is left-aligned; the theme toggle is the only action.
+- Center the 48px Hirono head without adjacent wordmark text; independently anchor the theme toggle to the right so the head remains mathematically centered.
 - Use the isolated hand-drawn Hirono head as the product mark and favicon. Keep its exterior transparent and internal white fill opaque; never place it inside the former red `H` square.
 - On mobile, remove center navigation before reducing touch targets.
 
 ### Access gate
 
 - The private archive opens with a single centered passcode form on the active theme canvas.
-- The Hirono head appears directly left of `Your Hirono`, the only heading; omit welcome copy, promotional panels and session-duration notes.
+- Use the regular app canvas rather than the soft-gray section surface.
+- Center the Hirono head at 112px without visible title text; retain a screen-reader-only `Your Hirono` heading.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
+
+### Theme control
+
+- Present the light/dark control as an icon only, with no border or surrounding tile.
+- Retain a 44px touch target, visible keyboard focus, and short opacity/press feedback.
 
 ### Entry point
 
