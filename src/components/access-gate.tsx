@@ -36,7 +36,7 @@ export function AccessGate() {
       <section className="w-full max-w-md">
         <form onSubmit={unlock} className="w-full max-w-md" aria-describedby={error ? "passcode-error" : undefined}>
           <h1 className="sr-only">Your Hirono</h1>
-          <Image src="/brand/hirono-head.png" alt="" width={112} height={112} className="mx-auto size-28 object-contain" priority />
+          <Image src="/brand/hirono-head.png" alt="" width={48} height={48} className="mx-auto size-12 object-contain" priority />
           <label htmlFor="archive-passcode" className="mt-10 block text-[10px] font-bold uppercase text-secondary">Passcode</label>
           <input
             id="archive-passcode"

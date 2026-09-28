@@ -498,7 +498,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
               event.preventDefault();
               window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
             }} className="flex items-center" aria-label="Your Hirono home">
-              <Image src="/brand/hirono-head.png" alt="" width={48} height={48} className="size-12 object-contain" priority />
+              <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
             </a>
             <ThemeToggle className="absolute right-5 md:right-8" />
           </div>

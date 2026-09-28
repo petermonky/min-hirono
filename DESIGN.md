@@ -80,7 +80,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Header
 
 - Use a single 64px themed-canvas navigation row with a thin lower divider.
-- Center the 48px Hirono head without adjacent wordmark text; independently anchor the theme toggle to the right so the head remains mathematically centered.
+- Center the 36px Hirono head without adjacent wordmark text; independently anchor the theme toggle to the right so the head remains mathematically centered.
 - Use the isolated hand-drawn Hirono head as the product mark and favicon. Keep its exterior transparent and internal white fill opaque; never place it inside the former red `H` square.
 - On mobile, remove center navigation before reducing touch targets.
 
@@ -88,7 +88,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 - The private archive opens with a single centered passcode form on the active theme canvas.
 - Use the regular app canvas rather than the soft-gray section surface.
-- Center the Hirono head at 112px without visible title text; retain a screen-reader-only `Your Hirono` heading.
+- Center the Hirono head at 48px without visible title text; retain a screen-reader-only `Your Hirono` heading. Use the high-resolution source asset at this compact display size for crisp rendering.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
 
