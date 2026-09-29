@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 type Theme = "light" | "dark";
 
 const THEME_KEY = "yourHironoTheme";
+let transitionTimer: number | undefined;
 
 function applyTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme;
+  const root = document.documentElement;
+  window.clearTimeout(transitionTimer);
+  root.classList.add("theme-changing");
+  root.dataset.theme = theme;
+  root.style.colorScheme = theme;
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#111111" : "#FFFFFF");
+  transitionTimer = window.setTimeout(() => root.classList.remove("theme-changing"), 160);
 }
 
 export function ThemeToggle({ className = "" }: { className?: string }) {

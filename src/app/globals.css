@@ -25,6 +25,7 @@
   --error: #c91524;
   --hirono-pink: #ffb6d2;
   --progress-track: #dedede;
+  --theme-duration: 140ms;
   --motion-easing: cubic-bezier(0.2, 0, 0, 1);
 }
 
@@ -108,9 +109,16 @@ section,
 footer,
 dialog {
   transition:
-    color 240ms var(--motion-easing),
-    background-color 240ms var(--motion-easing),
-    border-color 240ms var(--motion-easing);
+    color var(--theme-duration) var(--motion-easing),
+    background-color var(--theme-duration) var(--motion-easing),
+    border-color var(--theme-duration) var(--motion-easing);
+}
+
+:root.theme-changing,
+:root.theme-changing * {
+  transition-property: color, background-color, border-color, fill, stroke !important;
+  transition-duration: var(--theme-duration) !important;
+  transition-timing-function: var(--motion-easing) !important;
 }
 
 button, input { font: inherit; }
@@ -197,7 +205,11 @@ button:disabled { cursor: default; }
     color 120ms var(--motion-easing);
 }
 
-.chunky-button.border-primary-strong { border-color: var(--primary); }
+.chunky-button.border-primary-strong { border-color: var(--primary-strong); }
+.chunky-button.border-primary { border-color: var(--primary); }
+.chunky-button.border-ink { border-color: var(--ink); }
+.chunky-button.border-canvas { border-color: var(--canvas); }
+.chunky-button.border-hairline-strong { border-color: var(--hairline-strong); }
 .chunky-button.border-error { border-color: var(--error); }
 .chunky-button:active:not(:disabled) { transform: translateY(1px); }
 .chunky-button:disabled { opacity: 0.48; }

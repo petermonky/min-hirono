@@ -136,7 +136,8 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Footer and dialogs
 
-- The footer is a compact black row containing only the lock and reset actions, aligned to the right.
+- The footer is a compact inverse-ink row containing only the lock and reset actions, aligned to the right. It becomes light in dark mode rather than remaining hard-coded black.
+- Button borders must resolve from their semantic tokens after the shared button rule; inverse footer actions use the canvas color so their outlines remain clear in both themes.
 - Dialogs are flat canvas-colored rectangles with a 1px high-contrast border and no shadow treatment.
 - Confirmation dialogs begin directly with the action title; do not add an eyebrow label above it.
 
@@ -156,4 +157,4 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Image fallback is plain centered text; never show broken-image browser UI.
 - Browser zoom remains functional.
 - Respect `prefers-reduced-motion`; interactions become effectively immediate.
-- Persist the chosen light/dark theme on the device, use the system preference on first visit, and transition theme colors over 240ms.
+- Persist the chosen light/dark theme on the device, use the system preference on first visit, and transition every theme-dependent color, background and border together over 140ms.
