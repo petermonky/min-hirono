@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 export function AccessGate() {
   const router = useRouter();
@@ -31,8 +30,7 @@ export function AccessGate() {
   };
 
   return (
-    <main className="relative grid min-h-dvh place-items-center bg-canvas px-5 py-14 md:px-12">
-      <ThemeToggle className="absolute right-5 top-5 md:right-8 md:top-8" />
+    <main className="grid min-h-dvh place-items-center bg-canvas px-5 py-14 md:px-12">
       <section className="w-full max-w-md">
         <form onSubmit={unlock} className="w-full max-w-md" aria-describedby={error ? "passcode-error" : undefined}>
           <h1 className="sr-only">Your Hirono</h1>

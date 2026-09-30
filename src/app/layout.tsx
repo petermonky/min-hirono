@@ -24,24 +24,9 @@ export const viewport: Viewport = {
   themeColor: "#FFFFFF",
 };
 
-const themeScript = `
-  try {
-    const saved = localStorage.getItem("yourHironoTheme");
-    const theme = saved === "light" || saved === "dark"
-      ? saved
-      : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
-    addEventListener("DOMContentLoaded", () => {
-      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#111111" : "#FFFFFF");
-    }, { once: true });
-  } catch (_) {}
-`;
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
+    <html lang="en">
       <body className="antialiased">{children}</body>
     </html>
   );

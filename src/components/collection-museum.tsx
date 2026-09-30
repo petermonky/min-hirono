@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { KeyboardEvent, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { Category, CollectibleItem, Release } from "@/lib/catalog";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const STORAGE_KEY = "hironoCollectionV2";
 const releaseDateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
@@ -500,7 +499,6 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
             }} className="flex items-center" aria-label="Your Hirono home">
               <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
             </a>
-            <ThemeToggle className="absolute right-5 md:right-8" />
           </div>
         </nav>
       </header>
@@ -624,11 +622,11 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         </section>
       </main>
 
-      <footer className="bg-ink text-canvas">
+      <footer className="bg-black text-white">
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-end gap-5 px-5 py-10 md:px-8">
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={lockArchive} className="chunky-button h-11 border-canvas bg-ink px-4 text-[10px] uppercase text-canvas hover:bg-canvas hover:text-ink">Lock archive</button>
-            <button type="button" onClick={reset} className="chunky-button h-11 border-canvas bg-primary px-4 text-[10px] uppercase text-on-primary">Reset</button>
+            <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase text-white hover:bg-white hover:text-black">Lock archive</button>
+            <button type="button" onClick={reset} className="chunky-button h-11 border-white bg-primary px-4 text-[10px] uppercase text-on-primary">Reset</button>
           </div>
         </div>
       </footer>

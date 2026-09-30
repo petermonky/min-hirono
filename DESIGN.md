@@ -4,14 +4,14 @@ Version: 2.0
 Source influence: POP MART retail storefront
 Reference: https://www.popmart.com/sg
 
-This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: high-contrast retail canvases, black structural surfaces, compact uppercase labels, clean product grids, square image stages, baby-pink accents and generous sectional spacing.
+This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: a white retail canvas, black structural surfaces, compact uppercase labels, clean product grids, square image stages, baby-pink accents and generous sectional spacing.
 
 The app must remain clearly branded as an independent HIRONO collection tracker. Do not reproduce POP MART logos, commerce copy, prices or checkout patterns.
 
 ## Direction
 
 - Treat artwork as merchandise photography: large, square and visually dominant.
-- Use a bright white canvas with soft-gray product stages in light mode and a near-black canvas with charcoal stages in dark mode.
+- Use a bright white canvas with soft-gray product stages and almost no decorative container styling.
 - Black creates structure in the footer and active controls.
 - Baby pink is the interaction, progress and ownership accent. Reserve red for destructive and error states.
 - Use centered uppercase section titles with a short baby-pink rule.
@@ -38,14 +38,6 @@ colors:
   hironoPink: "#FFB6D2"
   focus: "#2563EB"
   error: "#C91524"
-
-darkMode:
-  canvas: "#101010"
-  canvasSoft: "#171717"
-  surface: "#1D1D1D"
-  ink: "#F4F4F4"
-  border: "#2D2D2D"
-  borderStrong: "#555555"
 
 typography:
   display:
@@ -79,23 +71,18 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Header
 
-- Use a single 64px themed-canvas navigation row with a thin lower divider.
-- Center the 36px Hirono head without adjacent wordmark text; independently anchor the theme toggle to the right so the head remains mathematically centered.
+- Use a single 64px white navigation row with a thin lower divider.
+- Center the 36px Hirono head without adjacent wordmark text or secondary controls.
 - Use the isolated hand-drawn Hirono head as the product mark and favicon. Keep its exterior transparent and internal white fill opaque; never place it inside the former red `H` square.
 - On mobile, remove center navigation before reducing touch targets.
 
 ### Access gate
 
-- The private archive opens with a single centered passcode form on the active theme canvas.
+- The private archive opens with a single centered passcode form on the white app canvas.
 - Use the regular app canvas rather than the soft-gray section surface.
 - Center the Hirono head at 48px without visible title text; retain a screen-reader-only `Your Hirono` heading. Use the high-resolution source asset at this compact display size for crisp rendering.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
-
-### Theme control
-
-- Present the light/dark control as an icon only, with no border or surrounding tile.
-- Retain a 44px touch target, visible keyboard focus, and short opacity/press feedback.
 
 ### Entry point
 
@@ -136,8 +123,8 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Footer and dialogs
 
-- The footer is a compact inverse-ink row containing only the lock and reset actions, aligned to the right. It becomes light in dark mode rather than remaining hard-coded black.
-- Button borders must resolve from their semantic tokens after the shared button rule; inverse footer actions use the canvas color so their outlines remain clear in both themes.
+- The footer is a compact black row containing only the lock and reset actions, aligned to the right.
+- Footer actions use white borders so their outlines remain clear against black.
 - Dialogs are flat canvas-colored rectangles with a 1px high-contrast border and no shadow treatment.
 - Confirmation dialogs begin directly with the action title; do not add an eyebrow label above it.
 
@@ -151,10 +138,9 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ## Accessibility
 
-- Essential copy maintains strong contrast on both the light and dark canvases.
+- Essential copy uses black or dark gray on white.
 - Baby pink is always paired with labels, counts or checkmarks and uses near-black foreground content.
 - Keyboard focus uses a visible 2px blue outline.
 - Image fallback is plain centered text; never show broken-image browser UI.
 - Browser zoom remains functional.
 - Respect `prefers-reduced-motion`; interactions become effectively immediate.
-- Persist the chosen light/dark theme on the device, use the system preference on first visit, and transition every theme-dependent color, background and border together over 140ms.

@@ -25,31 +25,7 @@
   --error: #c91524;
   --hirono-pink: #ffb6d2;
   --progress-track: #dedede;
-  --theme-duration: 140ms;
   --motion-easing: cubic-bezier(0.2, 0, 0, 1);
-}
-
-:root[data-theme="dark"] {
-  --primary-strong: #ffb6d2;
-  --ink: #f4f4f4;
-  --body: #d6d6d6;
-  --secondary: #adadad;
-  --mute: #8c8c8c;
-  --disabled: #696969;
-  --canvas: #101010;
-  --canvas-soft: #171717;
-  --surface: #1d1d1d;
-  --surface-hover: #272727;
-  --hairline: #2d2d2d;
-  --hairline-strong: #555555;
-  --image-warm-light: #32272b;
-  --image-warm-mid: #624b55;
-  --image-warm-dark: #b596a2;
-  --focus: #8ab4f8;
-  --success: #5ac98b;
-  --warning: #e0a24b;
-  --error: #ff707a;
-  --progress-track: #3a3a3a;
 }
 
 @theme inline {
@@ -98,27 +74,6 @@ body {
   font-size: 14px;
   font-weight: 400;
   line-height: 1.4;
-}
-
-html,
-body,
-header,
-nav,
-main,
-section,
-footer,
-dialog {
-  transition:
-    color var(--theme-duration) var(--motion-easing),
-    background-color var(--theme-duration) var(--motion-easing),
-    border-color var(--theme-duration) var(--motion-easing);
-}
-
-:root.theme-changing,
-:root.theme-changing * {
-  transition-property: color, background-color, border-color, fill, stroke !important;
-  transition-duration: var(--theme-duration) !important;
-  transition-timing-function: var(--motion-easing) !important;
 }
 
 button, input { font: inherit; }
@@ -208,7 +163,7 @@ button:disabled { cursor: default; }
 .chunky-button.border-primary-strong { border-color: var(--primary-strong); }
 .chunky-button.border-primary { border-color: var(--primary); }
 .chunky-button.border-ink { border-color: var(--ink); }
-.chunky-button.border-canvas { border-color: var(--canvas); }
+.chunky-button.border-white { border-color: #ffffff; }
 .chunky-button.border-hairline-strong { border-color: var(--hairline-strong); }
 .chunky-button.border-error { border-color: var(--error); }
 .chunky-button:active:not(:disabled) { transform: translateY(1px); }
