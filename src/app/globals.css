@@ -164,6 +164,7 @@ button:disabled { cursor: default; }
 .chunky-button.border-primary { border-color: var(--primary); }
 .chunky-button.border-ink { border-color: var(--ink); }
 .chunky-button.border-white { border-color: #ffffff; }
+.chunky-button.border-transparent { border-color: transparent; }
 .chunky-button.border-hairline-strong { border-color: var(--hairline-strong); }
 .chunky-button.border-error { border-color: var(--error); }
 .chunky-button:active:not(:disabled) { transform: translateY(1px); }

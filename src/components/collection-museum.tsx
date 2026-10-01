@@ -626,7 +626,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-end gap-5 px-5 py-10 md:px-8">
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase text-white hover:bg-white hover:text-black">Lock archive</button>
-            <button type="button" onClick={reset} className="chunky-button h-11 border-white bg-primary px-4 text-[10px] uppercase text-on-primary">Reset</button>
+            <button type="button" onClick={reset} className="chunky-button h-11 border-transparent bg-primary px-4 text-[10px] uppercase text-on-primary">Reset</button>
           </div>
         </div>
       </footer>

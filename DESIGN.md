@@ -124,7 +124,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Footer and dialogs
 
 - The footer is a compact black row containing only the lock and reset actions, aligned to the right.
-- Footer actions use white borders so their outlines remain clear against black.
+- `Lock archive` uses a white outline against the black footer; the filled red reset action has no visible outline.
 - Dialogs are flat canvas-colored rectangles with a 1px high-contrast border and no shadow treatment.
 - Confirmation dialogs begin directly with the action title; do not add an eyebrow label above it.
 
