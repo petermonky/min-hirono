@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #ffb6d2;
-  --primary-strong: #a9436b;
-  --on-primary: #111111;
+  --primary: #e60012;
+  --primary-strong: #b7000e;
+  --on-primary: #ffffff;
   --ink: #111111;
   --body: #343434;
   --secondary: #666666;
@@ -19,7 +19,7 @@
   --image-warm-mid: #ffcadc;
   --image-warm-dark: #715c63;
   --focus: #2563eb;
-  --accent: #ffb6d2;
+  --accent: #e60012;
   --success: #177245;
   --warning: #9a5d00;
   --error: #c91524;

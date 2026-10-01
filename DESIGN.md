@@ -4,7 +4,7 @@ Version: 2.0
 Source influence: POP MART retail storefront
 Reference: https://www.popmart.com/sg
 
-This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: a white retail canvas, black structural surfaces, compact uppercase labels, clean product grids, square image stages, baby-pink accents and generous sectional spacing.
+This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: a white retail canvas, black structural surfaces, compact uppercase labels, clean product grids, square image stages, restrained red accents and generous sectional spacing.
 
 The app must remain clearly branded as an independent HIRONO collection tracker. Do not reproduce POP MART logos, commerce copy, prices or checkout patterns.
 
@@ -13,8 +13,8 @@ The app must remain clearly branded as an independent HIRONO collection tracker.
 - Treat artwork as merchandise photography: large, square and visually dominant.
 - Use a bright white canvas with soft-gray product stages and almost no decorative container styling.
 - Black creates structure in the footer and active controls.
-- Baby pink is the interaction, progress and ownership accent. Reserve red for destructive and error states.
-- Use centered uppercase section titles with a short baby-pink rule.
+- POP MART red is the interaction, progress and ownership accent. Baby pink remains a quiet HIRONO undertone in fallback and image surfaces.
+- Use centered uppercase section titles with a short red rule.
 - Prefer thin dividers and spacing over rounded cards, shadows or tinted panels.
 - Keep controls compact and rectangular. No faux-3D button depth.
 - Preserve the chronological archive model even though its presentation resembles a storefront.
@@ -23,9 +23,9 @@ The app must remain clearly branded as an independent HIRONO collection tracker.
 
 ```yaml
 colors:
-  primary: "#FFB6D2"
-  primaryStrong: "#A9436B"
-  onPrimary: "#111111"
+  primary: "#E60012"
+  primaryStrong: "#B7000E"
+  onPrimary: "#FFFFFF"
   ink: "#111111"
   body: "#343434"
   secondary: "#666666"
@@ -111,13 +111,13 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
 - Missing items retain 70% image opacity; avoid grayscale.
-- Owned items use a baby-pink check block with dark iconography and a visible border. Missing items use the empty checkbox; secondary status captions are omitted.
+- Owned items use a red check block with white iconography and a visible border. Missing items use the empty checkbox; secondary status captions are omitted.
 - Secrets use a compact black label and remain fully visible.
 - Collaboration badges use a gray fill with white text. Product type always describes the object itself rather than using `Collaboration` as a type.
 
 ### Progress
 
-- Progress tracks are 4px high with a gray track and baby-pink fill.
+- Progress tracks are 4px high with a gray track and red fill.
 - Every bar is paired with exact counts and percentage text.
 - Completion never relies on color alone.
 
@@ -139,7 +139,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ## Accessibility
 
 - Essential copy uses black or dark gray on white.
-- Baby pink is always paired with labels, counts or checkmarks and uses near-black foreground content.
+- Red is always paired with labels, counts or checkmarks and uses white foreground content where needed.
 - Keyboard focus uses a visible 2px blue outline.
 - Image fallback is plain centered text; never show broken-image browser UI.
 - Browser zoom remains functional.
