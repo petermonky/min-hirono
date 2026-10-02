@@ -42,7 +42,7 @@ function ArtworkPlaceholder({ name }: { name: string }) {
   return (
     <span className="absolute inset-0 grid place-items-center bg-surface px-4 text-center">
       <span>
-        <span className="block text-[10px] font-medium uppercase text-mute">Your Hirono</span>
+        <span className="block text-[10px] font-medium text-mute">your hirono</span>
         <span className="mt-1 block text-xs text-secondary">Image unavailable</span>
         <span className="sr-only"> for {name}</span>
       </span>
@@ -496,7 +496,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
             <a href="#top" onClick={(event) => {
               event.preventDefault();
               window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-            }} className="flex items-center" aria-label="Your Hirono home">
+            }} className="flex items-center" aria-label="your hirono home">
               <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
             </a>
           </div>

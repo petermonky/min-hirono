@@ -1,10 +1,10 @@
-# Your Hirono storefront archive design language
+# your hirono storefront archive design language
 
 Version: 2.0
 Source influence: POP MART retail storefront
 Reference: https://www.popmart.com/sg
 
-This is the visual contract for Your Hirono. It translates POP MART's crisp merchandising language into a personal archive: a white retail canvas, black structural surfaces, compact uppercase labels, clean product grids, square image stages, restrained red accents and generous sectional spacing.
+This is the visual contract for your hirono. It translates POP MART's crisp merchandising language into a personal archive: a white retail canvas, black structural surfaces, compact uppercase labels, clean product grids, square image stages, restrained red accents and generous sectional spacing.
 
 The app must remain clearly branded as an independent HIRONO collection tracker. Do not reproduce POP MART logos, commerce copy, prices or checkout patterns.
 
@@ -80,7 +80,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 - The private archive opens with a single centered passcode form on the white app canvas.
 - Use the regular app canvas rather than the soft-gray section surface.
-- Center the Hirono head at 48px without visible title text; retain a screen-reader-only `Your Hirono` heading. Use the high-resolution source asset at this compact display size for crisp rendering.
+- Center the Hirono head at 48px without visible title text; retain a screen-reader-only `your hirono` heading. Use the high-resolution source asset at this compact display size for crisp rendering.
 - Keep the passcode field and primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
 

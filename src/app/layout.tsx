@@ -6,7 +6,7 @@ import "@fontsource/barlow/900.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Your Hirono",
+  title: "your hirono",
   description: "A private, visual collection tracker for HIRONO figures, plush, pendants and accessories.",
   icons: {
     icon: [
