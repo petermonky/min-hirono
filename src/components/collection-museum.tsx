@@ -505,7 +505,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
 
       <main id="top">
         <section className="border-y border-hairline bg-canvas-soft">
-          <div className="mx-auto grid max-w-[1280px] gap-8 px-5 pb-32 pt-12 md:grid-cols-[1fr_auto] md:items-end md:px-8 md:pb-44 md:pt-16">
+          <div className="mx-auto grid max-w-[1280px] gap-8 px-5 py-[88px] md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-[120px]">
             <div>
               <div className="flex items-end gap-4">
                 <p className="display-lg tabular-nums">{ownedCount}<span className="text-mute">/{total}</span></p>
@@ -520,7 +520,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
         </section>
 
         <section id="catalog" className="mx-auto max-w-[1280px] px-5 pb-20 pt-0 md:px-8 md:pb-28">
-          <div className="sticky top-16 z-30 -mx-5 mb-14 border-y border-hairline bg-canvas/95 px-5 py-3 backdrop-blur-md md:mx-0 md:px-4">
+          <div className="sticky top-16 z-30 -mx-5 mb-14 border-b border-hairline bg-canvas/95 px-5 py-3 backdrop-blur-md md:mx-0 md:px-4">
             <div className="flex items-center gap-2">
               <div className="relative min-w-0 flex-1 xl:max-w-[360px]">
                 <Icon name="search" className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-secondary" />

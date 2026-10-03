@@ -88,12 +88,13 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 - Begin with collection progress, followed immediately by filters and the chronological archive.
 - Let the soft-gray progress section absorb the page's opening vertical space and continue directly to the top edge of the filter bar; do not leave a white gap between them.
+- Vertically center the progress content within that opening section by distributing its vertical padding evenly.
 - Do not add a marketing hero, latest-release shelf or archive introduction block.
 - Avoid descriptive subheadings beneath page or release titles; let imagery, metadata and progress establish hierarchy.
 
 ### Archive and filters
 
-- The filter bar is sticky beneath the navigation and uses thin horizontal rules.
+- The filter bar is sticky beneath the navigation and uses a thin lower rule; omit its upper rule where it meets the progress section.
 - Mobile shows one compact row containing search and a `Filters` disclosure button. Category and ownership controls stay collapsed until requested; the button displays the number of active filters.
 - Expanded mobile filter groups use identical vertical spacing and consistent minimum control widths. Rails scroll horizontally only. Dynamic white edge fades transition over 180ms and appear only where additional options remain off-screen.
 - Desktop presents search, category and ownership controls in one horizontal toolbar—never two permanently visible rows.
