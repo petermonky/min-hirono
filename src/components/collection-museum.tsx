@@ -616,7 +616,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
             </section>
           )) : (
             <div className="grid min-h-80 place-items-center border border-hairline p-8 text-center">
-              <div><p className="text-2xl">· ᴗ ·</p><h2 className="mt-4 title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-on-primary">Clear filters</button></div>
+              <div><h2 className="title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-on-primary">Clear filters</button></div>
             </div>
           )}
         </section>
