@@ -89,6 +89,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Begin with collection progress, followed immediately by filters and the chronological archive.
 - Let the soft-gray progress section absorb the page's opening vertical space and continue directly to the top edge of the filter bar; do not leave a white gap between them.
 - Vertically center the progress content within that opening section by distributing its vertical padding evenly.
+- Treat the collected-to-total ratio as the section's dominant element, using the large display scale while keeping its supporting label secondary.
 - Do not add a marketing hero, latest-release shelf or archive introduction block.
 - Avoid descriptive subheadings beneath page or release titles; let imagery, metadata and progress establish hierarchy.
 
