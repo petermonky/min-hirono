@@ -291,8 +291,10 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [confirmation, setConfirmation] = useState<Confirmation>(null);
   const [toast, setToast] = useState("");
+  const [showHeaderProgress, setShowHeaderProgress] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const progressSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -315,6 +317,17 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
     const timer = window.setTimeout(() => setToast(""), 2500);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    const progressSection = progressSectionRef.current;
+    if (!progressSection) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowHeaderProgress(!entry.isIntersecting),
+      { rootMargin: "-64px 0px 0px 0px", threshold: 0 },
+    );
+    observer.observe(progressSection);
+    return () => observer.disconnect();
+  }, []);
 
   const refreshCollection = useCallback(async () => {
     const response = await fetch("/api/collection", { cache: "no-store" });
@@ -492,19 +505,36 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
       <a href="#catalog" className="chunky-button fixed left-4 top-4 z-50 -translate-y-24 bg-canvas px-4 py-3 text-xs text-ink focus:translate-y-0">Skip to collection</a>
       <header className="sticky top-0 z-40 bg-canvas">
         <nav className="border-b border-hairline" aria-label="Primary navigation">
-          <div className="relative mx-auto flex h-16 max-w-[1280px] items-center justify-center px-5 md:px-8">
+          <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-5 md:px-8">
             <a href="#top" onClick={(event) => {
               event.preventDefault();
               window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
             }} className="flex items-center" aria-label="your hirono home">
               <Image src="/brand/hirono-head.png" alt="" width={36} height={36} className="size-9 object-contain" priority />
             </a>
+            <div
+              className={`w-[calc(100vw-176px)] transition-all duration-200 ease-museum md:w-[220px] ${showHeaderProgress ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"}`}
+              aria-hidden={!showHeaderProgress}
+              aria-label={`Collection progress: ${ownedCount} of ${total}, ${overallPercent}%`}
+              aria-valuemax={100}
+              aria-valuemin={0}
+              aria-valuenow={overallPercent}
+              role="progressbar"
+            >
+              <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium leading-none tabular-nums">
+                <span className="text-secondary">{ownedCount} / {total}</span>
+                <strong className="font-semibold text-ink">{overallPercent}%</strong>
+              </div>
+              <div className="progress-track">
+                <div className="progress-fill transition-[width] duration-300 ease-museum" style={{ width: `${overallPercent}%` }} />
+              </div>
+            </div>
           </div>
         </nav>
       </header>
 
       <main id="top">
-        <section className="border-y border-hairline bg-canvas-soft">
+        <section ref={progressSectionRef} className="border-y border-hairline bg-canvas-soft">
           <div className="mx-auto grid max-w-[1280px] gap-8 px-5 py-[88px] md:grid-cols-[1fr_auto] md:items-end md:px-8 md:py-[120px]">
             <div>
               <div className="flex items-end gap-4">

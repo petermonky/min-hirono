@@ -72,7 +72,8 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Header
 
 - Use a single 64px white navigation row with a thin lower divider.
-- Center the 36px Hirono head without adjacent wordmark text or secondary controls.
+- Place the 36px Hirono head at the left edge without adjacent wordmark text.
+- Once the main progress section leaves the viewport, reveal a compact collection summary at the right edge of the header. Match its progress-track width to the release-card progress column: fluid beside the 120px mobile thumbnail and fixed at 220px from the desktop card layout onward.
 - Use the isolated hand-drawn Hirono head as the product mark and favicon. Keep its exterior transparent and internal white fill opaque; never place it inside the former red `H` square.
 - On mobile, remove center navigation before reducing touch targets.
 
