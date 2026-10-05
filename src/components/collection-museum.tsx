@@ -521,8 +521,8 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
               aria-valuenow={overallPercent}
               role="progressbar"
             >
-              <div className="mb-1.5 flex items-center justify-between text-[10px] font-medium leading-none tabular-nums">
-                <span className="text-secondary">{ownedCount} / {total}</span>
+              <div className="mb-3 flex items-end justify-between text-xs tabular-nums">
+                <span className="text-secondary">{ownedCount} / {total} collected</span>
                 <strong className="font-semibold text-ink">{overallPercent}%</strong>
               </div>
               <div className="progress-track">
