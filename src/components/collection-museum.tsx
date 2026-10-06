@@ -601,7 +601,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                       {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
                     </FilterRail>
                   </div>
-                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="h-11 justify-self-start px-2 text-[9px] font-bold uppercase text-primary-strong">Clear filters</button>}
+                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="flex h-11 items-start justify-self-start text-[8px] font-bold uppercase text-primary-strong">Clear filters</button>}
                 </div>
               </div>
             )}
