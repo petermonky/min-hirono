@@ -114,6 +114,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Expand and collapse the item panel with a quiet height-and-opacity transition.
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
+- A completed release gains a thin, organically oscillating red current and a softer outer glow around its cover. This is the one deliberate exception to the otherwise shadow-free image stages; keep the movement subtle and render it statically when reduced motion is requested.
 - Missing items retain 70% image opacity; avoid grayscale.
 - Owned items use a red check block with white iconography and a visible border. Missing items use the empty checkbox; secondary status captions are omitted.
 - Secrets use a compact black label and remain fully visible.

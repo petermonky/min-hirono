@@ -211,6 +211,60 @@ button:disabled { cursor: default; }
   box-shadow: none;
 }
 
+.release-cover-shell {
+  isolation: isolate;
+}
+
+.release-cover-complete::before,
+.release-cover-complete::after {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.release-cover-complete::before {
+  inset: -3px;
+  border: 2px solid color-mix(in srgb, var(--primary) 88%, transparent);
+  box-shadow:
+    -3px 0 7px color-mix(in srgb, var(--primary) 34%, transparent),
+    3px 1px 9px color-mix(in srgb, var(--primary) 26%, transparent);
+  animation: completion-current 2.8s ease-in-out infinite;
+}
+
+.release-cover-complete::after {
+  inset: -7px;
+  border: 4px solid color-mix(in srgb, var(--primary) 34%, transparent);
+  filter: blur(5px);
+  opacity: 0.55;
+  animation: completion-glow 3.6s ease-in-out infinite reverse;
+}
+
+@keyframes completion-current {
+  0%, 100% {
+    border-radius: 2% 1% 3% 1%;
+    transform: translate(-1px, 0) scale(1.003, 1.009);
+  }
+  28% {
+    border-radius: 1% 3% 1% 4%;
+    transform: translate(0, -1px) scale(1.01, 1.003);
+  }
+  57% {
+    border-radius: 4% 1% 3% 2%;
+    transform: translate(1px, 0) scale(1.004, 1.012);
+  }
+  81% {
+    border-radius: 2% 4% 1% 3%;
+    transform: translate(0, 1px) scale(1.012, 1.004);
+  }
+}
+
+@keyframes completion-glow {
+  0%, 100% { opacity: 0.42; transform: scale(1.005, 1.015); }
+  35% { opacity: 0.72; transform: scale(1.02, 1.006); }
+  68% { opacity: 0.5; transform: scale(1.008, 1.022); }
+}
+
 .progress-track {
   height: 4px;
   overflow: hidden;
@@ -271,4 +325,6 @@ dialog::backdrop { background: rgb(0 0 0 / 58%); }
   }
 
   .chunky-button:active:not(:disabled) { transform: none; }
+  .release-cover-complete::before,
+  .release-cover-complete::after { animation: none; }
 }
