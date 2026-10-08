@@ -261,7 +261,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <p className="text-[10px] font-medium uppercase text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
               <div className="flex items-center gap-4 text-[10px] font-semibold uppercase">
-                {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">Product source</a>}
+                {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">Source</a>}
                 {ownedCount > 0 && !upcoming && <button type="button" onClick={onClear} className="text-secondary hover:text-error">Clear release</button>}
               </div>
             </div>
