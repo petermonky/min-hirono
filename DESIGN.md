@@ -97,7 +97,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 ### Archive and filters
 
 - The filter bar is sticky beneath the navigation and uses a thin lower rule; omit its upper rule where it meets the progress section.
-- Mobile shows one compact row containing search and a `Filters` disclosure button. Category and ownership controls stay collapsed until requested; the button displays the number of active filters.
+- Mobile shows one compact row containing search and a `Filters` disclosure button. Category and ownership controls stay collapsed until requested; the button displays the number of active filters. Animate the panel open and closed with the same quiet height-and-opacity transition used by release panels.
 - Expanded mobile filter groups use identical vertical spacing and consistent minimum control widths. Rails scroll horizontally only. Dynamic white edge fades transition over 180ms and appear only where additional options remain off-screen. Keep the clear-filters action in the smallest utility-text tier with balanced space above and below; enlarge its touch target invisibly rather than adding visible whitespace.
 - Desktop presents search, category and ownership controls in one horizontal toolbar—never two permanently visible rows.
 - Search fields and filter controls are rectangular with 1px borders.

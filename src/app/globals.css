@@ -201,6 +201,28 @@ button:disabled { cursor: default; }
   overflow: hidden;
 }
 
+.mobile-filter-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: 0;
+  opacity: 0;
+  transition:
+    grid-template-rows 280ms var(--motion-easing),
+    margin-top 280ms var(--motion-easing),
+    opacity 180ms var(--motion-easing);
+}
+
+.mobile-filter-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  margin-top: 12px;
+  opacity: 1;
+}
+
+.mobile-filter-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
 @media (min-width: 768px) {
   .release-panel[data-open="true"] { margin-top: 40px; }
 }

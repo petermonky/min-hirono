@@ -586,9 +586,9 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
               </div>
             </div>
 
-            {filtersOpen && (
-              <div id="mobile-filters" className="mt-3 w-full min-w-0 overflow-hidden border-t border-hairline pt-3 xl:hidden">
-                <div className="grid min-w-0 gap-5 overflow-hidden">
+            <div id="mobile-filters" className="mobile-filter-panel w-full min-w-0 xl:hidden" data-open={filtersOpen} inert={!filtersOpen} aria-hidden={!filtersOpen}>
+              <div className="mobile-filter-panel-inner">
+                <div className="grid min-w-0 gap-5 border-t border-hairline pt-3">
                   <div className="min-w-0">
                     <p className="mb-2 text-[9px] font-bold uppercase text-mute">Product type</p>
                     <FilterRail label="Filter by collection type">
@@ -604,7 +604,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                   {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="relative mb-2 justify-self-start text-[8px] font-bold uppercase text-primary-strong before:absolute before:-inset-x-2 before:-inset-y-4 before:content-['']">Clear filters</button>}
                 </div>
               </div>
-            )}
+            </div>
           </div>
 
           <div className="mb-10 flex items-center justify-between text-[10px] font-medium uppercase text-secondary">
