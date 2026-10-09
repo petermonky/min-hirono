@@ -112,7 +112,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - On compact layouts, center the release image against the full metadata-and-progress column so its visible top and bottom spacing remains balanced.
 - Compact release artwork is 120px square with a 16px gutter before the adjacent summary stack, large enough to balance the content without crowding a 320px viewport.
 - Expand and collapse the item panel with a quiet height-and-opacity transition.
-- Render release actions in sentence case: `Source`, `Clear release`, `Expand` and `Collapse`.
+- Render release actions in sentence case: `Product source`, `Clear release`, `Expand` and `Collapse`.
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
 - Missing items retain 70% image opacity; avoid grayscale.
