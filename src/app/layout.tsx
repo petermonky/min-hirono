@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "your hirono",
-  description: "A private, visual collection tracker for HIRONO figures, plush, pendants and accessories.",
+  description: "they yearn to be yours",
   icons: {
     icon: [
       { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
