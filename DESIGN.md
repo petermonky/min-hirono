@@ -115,6 +115,7 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 - Render release actions in sentence case: `Product source`, `Clear release`, `Expand` and `Collapse`.
 - Year rules use the same 1px thickness as release dividers.
 - Release covers and collectible art use square image stages with `object-fit: cover`.
+- On hover-capable devices, release covers use the same subtle 2.5% image zoom and 240ms easing as individual collectible art.
 - Missing items retain 70% image opacity; avoid grayscale.
 - Owned items use a red check block with white iconography and a visible border. Missing items use the empty checkbox; secondary status captions are omitted.
 - Secrets use a compact black label and remain fully visible.

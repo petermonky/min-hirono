@@ -82,7 +82,7 @@ function ReleaseCover({ release }: { release: Release }) {
       alt={`${release.name} collection`}
       fill
       sizes="(max-width: 768px) 96px, 176px"
-      className="object-cover"
+      className="release-cover-image object-cover"
       onError={() => setSourceIndex((current) => current + 1)}
     />
   );
