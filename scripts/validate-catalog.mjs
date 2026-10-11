@@ -1,4 +1,7 @@
+import { existsSync, readFileSync } from "node:fs";
 import { catalog } from "../data/hirono-catalog.js";
+
+const externalArtwork = JSON.parse(readFileSync(new URL("../src/data/external-artwork.json", import.meta.url), "utf8"));
 
 const fail = (message) => {
   throw new Error(`Catalog validation failed: ${message}`);
@@ -62,10 +65,25 @@ const stableReleaseIds = [
 
 for (const id of stableReleaseIds) assert(releaseIds.has(id), `stable release id ${id} was removed`);
 
+const validateExternalArtwork = (kind, entries, validIds) => {
+  for (const [id, entry] of Object.entries(entries)) {
+    assert(validIds.has(id), `external ${kind} artwork points to unknown id ${id}`);
+    assert(typeof entry.src === "string" && entry.src.startsWith("/artwork/"), `external ${kind} artwork ${id} must use a checked-in local asset`);
+    assert(existsSync(`public${entry.src}`), `external ${kind} artwork file is missing for ${id}`);
+    assert(typeof entry.sourceUrl === "string" && entry.sourceUrl.startsWith("https://"), `external ${kind} artwork ${id} needs an HTTPS source URL`);
+    assert(typeof entry.provider === "string" && entry.provider.trim(), `external ${kind} artwork ${id} needs a provider`);
+    assert(typeof entry.attribution === "string" && entry.attribution.trim(), `external ${kind} artwork ${id} needs attribution`);
+  }
+};
+
+validateExternalArtwork("item", externalArtwork.items, itemIds);
+validateExternalArtwork("cover", externalArtwork.covers, releaseIds);
+
 assert(catalog.length === 61, "unexpected total release count");
 assert(itemIds.size === 267, "unexpected collectible count");
 assert(catalog.filter((release) => release.tags.includes("mixed-ip")).length === 15, "unexpected mixed-IP release count");
 assert(catalog.find((release) => release.id === "hirono-little-hare-plush")?.items.length === 2, "Little Hare must include regular and special versions");
 assert(releaseIds.has("hirono-shanghai-pts-limited-figures"), "HIRONO Doll Panda is missing");
 
-console.log(`Catalog valid: ${catalog.length} releases, ${itemIds.size} collectibles, POP MART sources only.`);
+const externalArtworkCount = Object.keys(externalArtwork.items).length + Object.keys(externalArtwork.covers).length;
+console.log(`Catalog valid: ${catalog.length} releases, ${itemIds.size} collectibles, POP MART product sources, ${externalArtworkCount} attributed external artwork exception(s).`);

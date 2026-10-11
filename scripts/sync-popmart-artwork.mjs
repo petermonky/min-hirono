@@ -48,8 +48,8 @@ const curatedArtwork = {
 };
 
 // The current GB page renders its gallery client-side. These clean, square item
-// images come from POP MART's official City of Mercy gallery record. Wandering
-// uses the collector reference supplied alongside the official product page.
+// images come from POP MART's official City of Mercy gallery record. Explicit
+// non-POPMART exceptions live in external-artwork.json and are not managed here.
 const curatedRemoteArtwork = {
   "hirono-city-of-mercy-the-other": "https://prod-america-res.popmart.com/default/2_oSW0OpIT0a_1200x1200.jpg",
   "hirono-city-of-mercy-insight": "https://prod-america-res.popmart.com/default/1_hgI4HXkObl_1200x1200.jpg",

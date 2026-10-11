@@ -1,10 +1,12 @@
 import artwork from "@/data/official-artwork.json";
+import externalArtwork from "@/data/external-artwork.json";
 import { catalog as baseCatalog } from "../../data/hirono-catalog.js";
 
 export type Category = "figures" | "plush" | "accessories" | "collaborations";
 export type Rarity = "standard" | "secret" | "special";
 export type CatalogTag = "mixed-ip";
 export type SourceKind = "official" | "official-archive";
+export type ArtworkSourceKind = "official" | "external" | "provided" | "unknown";
 
 export interface CollectibleItem {
   id: string;
@@ -15,6 +17,9 @@ export interface CollectibleItem {
     src: string | null;
     alt: string;
     official: boolean;
+    sourceKind: ArtworkSourceKind;
+    sourceUrl: string | null;
+    provider: string | null;
   };
 }
 
@@ -45,25 +50,47 @@ type BaseRelease = Omit<Release, "coverImage" | "items"> & {
 const itemArtwork = artwork.items as Record<string, string>;
 const coverArtwork = artwork.covers as Record<string, string>;
 const sourceArtwork = artwork.sources as Record<string, string>;
+type ExternalArtworkEntry = {
+  src: string;
+  sourceUrl: string;
+  provider: string;
+  attribution?: string;
+};
+const externalItemArtwork = externalArtwork.items as Record<string, ExternalArtworkEntry>;
+const externalCoverArtwork = externalArtwork.covers as Record<string, ExternalArtworkEntry>;
 
 export const releases: Release[] = (baseCatalog as BaseRelease[])
   .map((release) => {
     const items = release.items.map((item) => {
-      const src = itemArtwork[item.id] || item.image?.src || null;
+      const external = externalItemArtwork[item.id];
+      const officialSrc = itemArtwork[item.id] || null;
+      const providedSrc = item.image?.src || null;
+      const src = external?.src || officialSrc || providedSrc;
+      const sourceKind: ArtworkSourceKind = external
+        ? "external"
+        : officialSrc || providedSrc?.includes("popmart.com")
+          ? "official"
+          : providedSrc
+            ? "provided"
+            : "unknown";
       return {
         ...item,
         image: {
           src,
           alt: item.image?.alt || `${item.name} from ${release.name}`,
-          official: Boolean(src?.startsWith("https://") && src.includes("popmart.com")),
+          official: sourceKind === "official",
+          sourceKind,
+          sourceUrl: external?.sourceUrl || null,
+          provider: external?.provider || null,
         },
       };
     });
 
+    const externalCover = externalCoverArtwork[release.id];
     return {
       ...release,
       sourceUrl: sourceArtwork[release.id] || release.sourceUrl,
-      coverImage: coverArtwork[release.id] || release.coverImage || items[0].image.src,
+      coverImage: externalCover?.src || coverArtwork[release.id] || release.coverImage || items[0].image.src,
       items,
     };
   })
