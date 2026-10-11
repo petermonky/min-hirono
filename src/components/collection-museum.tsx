@@ -10,6 +10,7 @@ const releaseDateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", 
 
 type OwnershipFilter = "all" | "owned" | "missing";
 type CategoryFilter = "all" | Category;
+type TagFilter = "all" | "mixed-ip";
 type Confirmation = { title: string; body: string; actionLabel: string; action: () => void } | null;
 
 const categoryOptions: Array<{ value: CategoryFilter; label: string }> = [
@@ -90,6 +91,11 @@ function ReleaseCover({ release }: { release: Release }) {
 
 function formatDate(date: string) {
   return releaseDateFormatter.format(new Date(`${date}T12:00:00`));
+}
+
+function sourceLabel(release: Release) {
+  if (release.sourceKind === "official-archive") return "Official POP MART archive";
+  return "Official POP MART";
 }
 
 function parseOwned(raw: string | null, validIds: Set<string>) {
@@ -234,8 +240,10 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
         </span>
         <span className="min-w-0 self-center">
           <span className="mb-2 flex flex-wrap items-center gap-2 text-[10px] font-medium uppercase text-secondary">
-            <span>{release.type}</span><span aria-hidden="true">·</span><time dateTime={release.releaseDate}>{formatDate(release.releaseDate)}</time>
+            <span>{release.type}</span><span aria-hidden="true">·</span>
+            {release.releaseDate ? <time dateTime={release.releaseDate}>{formatDate(release.releaseDate)}</time> : <span>{release.year || "Date unknown"}</span>}
             {release.collaboration && <span className="bg-secondary px-2 py-1 text-[9px] font-bold text-white">Collaboration</span>}
+            {release.tags.includes("mixed-ip") && <span className="bg-ink px-2 py-1 text-[9px] font-bold text-white">Mixed IP</span>}
             {upcoming && <span className="bg-primary px-2 py-1 text-[9px] font-bold text-on-primary">Coming soon</span>}
           </span>
           <h3 className="title-text text-pretty">{release.name}</h3>
@@ -261,7 +269,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <p className="text-[10px] font-medium uppercase text-mute">{visibleItems.length} {visibleItems.length === 1 ? "collectible" : "collectibles"} shown</p>
               <div className="flex items-center gap-4 text-[10px] font-semibold">
-                {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">Product source</a>}
+                {release.sourceUrl && <a href={release.sourceUrl} target="_blank" rel="noreferrer" className="text-secondary underline decoration-hairline-strong underline-offset-4 hover:text-ink">{sourceLabel(release)}</a>}
                 {ownedCount > 0 && !upcoming && <button type="button" onClick={onClear} className="text-secondary hover:text-error">Clear release</button>}
               </div>
             </div>
@@ -287,6 +295,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
   const deferredQuery = useDeferredValue(query);
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [ownership, setOwnership] = useState<OwnershipFilter>("all");
+  const [tag, setTag] = useState<TagFilter>("all");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [confirmation, setConfirmation] = useState<Confirmation>(null);
@@ -443,7 +452,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
   const overallPercent = Math.round((ownedCount / total) * 100) || 0;
 
   const searchIndex = useMemo(() => new Map(releases.map((release) => [release.id, {
-    releaseText: [release.name, release.type, release.collaboration, release.description]
+    releaseText: [release.name, release.type, release.collaboration, release.description, release.tags.includes("mixed-ip") ? "mixed IP" : null]
       .filter(Boolean).join(" ").toLowerCase(),
     itemText: new Map(release.items.map((item) => [item.id, item.name.toLowerCase()])),
   }])), [releases]);
@@ -454,6 +463,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
   const visibleReleases = useMemo(() => {
     return releases.flatMap((release) => {
       if (category !== "all" && release.category !== category) return [];
+      if (tag !== "all" && !release.tags.includes(tag)) return [];
       const indexedRelease = searchIndex.get(release.id);
       const releaseMatches = !normalizedQuery || indexedRelease?.releaseText.includes(normalizedQuery);
       const visibleItems = release.items.filter((item) => {
@@ -464,16 +474,19 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
       });
       return visibleItems.length ? [{ ...release, visibleItems }] : [];
     });
-  }, [category, normalizedQuery, owned, ownership, releases, searchIndex]);
+  }, [category, normalizedQuery, owned, ownership, releases, searchIndex, tag]);
 
   const yearGroups = useMemo(() => {
-    const groups = new Map<number, Array<Release & { visibleItems: CollectibleItem[] }>>();
-    visibleReleases.forEach((release) => groups.set(release.year, [...(groups.get(release.year) || []), release]));
+    const groups = new Map<number | "Date unknown", Array<Release & { visibleItems: CollectibleItem[] }>>();
+    visibleReleases.forEach((release) => {
+      const key = release.year || "Date unknown";
+      groups.set(key, [...(groups.get(key) || []), release]);
+    });
     return [...groups.entries()];
   }, [visibleReleases]);
 
-  const filtersActive = searchActive || category !== "all" || ownership !== "all";
-  const filterCount = Number(category !== "all") + Number(ownership !== "all");
+  const filtersActive = searchActive || category !== "all" || ownership !== "all" || tag !== "all";
+  const filterCount = Number(category !== "all") + Number(ownership !== "all") + Number(tag !== "all");
   const shownItems = visibleReleases.reduce((sum, release) => sum + release.visibleItems.length, 0);
 
   const clearRelease = (release: Release) => setConfirmation({
@@ -498,7 +511,7 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
     },
   });
 
-  const clearFilters = () => { setQuery(""); setCategory("all"); setOwnership("all"); setFiltersOpen(false); };
+  const clearFilters = () => { setQuery(""); setCategory("all"); setOwnership("all"); setTag("all"); setFiltersOpen(false); };
 
   return (
     <>
@@ -582,6 +595,8 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
               <div className="no-scrollbar ml-auto hidden items-center gap-2 overflow-x-auto xl:flex" aria-label="Catalog filters">
                 {categoryOptions.map((option) => <FilterPill key={option.value} active={category === option.value} onClick={() => setCategory(option.value)}>{option.label}</FilterPill>)}
                 <span className="mx-1 h-7 w-px shrink-0 bg-hairline" aria-hidden="true" />
+                <FilterPill active={tag === "mixed-ip"} onClick={() => setTag((current) => current === "mixed-ip" ? "all" : "mixed-ip")}>Mixed IP</FilterPill>
+                <span className="mx-1 h-7 w-px shrink-0 bg-hairline" aria-hidden="true" />
                 {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
               </div>
             </div>
@@ -596,12 +611,19 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
                     </FilterRail>
                   </div>
                   <div className="min-w-0">
+                    <p className="mb-2 text-[9px] font-bold uppercase text-mute">Catalog tag</p>
+                    <FilterRail label="Filter by catalog tag">
+                      <FilterPill active={tag === "all"} onClick={() => setTag("all")}>All</FilterPill>
+                      <FilterPill active={tag === "mixed-ip"} onClick={() => setTag("mixed-ip")}>Mixed IP</FilterPill>
+                    </FilterRail>
+                  </div>
+                  <div className="min-w-0">
                     <p className="mb-2 text-[9px] font-bold uppercase text-mute">Ownership</p>
                     <FilterRail label="Filter by ownership">
                       {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
                     </FilterRail>
                   </div>
-                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); }} className="relative mb-2 justify-self-start text-[8px] font-bold uppercase text-primary-strong before:absolute before:-inset-x-2 before:-inset-y-4 before:content-['']">Clear filters</button>}
+                  {filterCount > 0 && <button type="button" onClick={() => { setCategory("all"); setOwnership("all"); setTag("all"); }} className="relative mb-2 justify-self-start text-[8px] font-bold uppercase text-primary-strong before:absolute before:-inset-x-2 before:-inset-y-4 before:content-['']">Clear filters</button>}
                 </div>
               </div>
             </div>

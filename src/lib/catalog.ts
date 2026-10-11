@@ -3,6 +3,8 @@ import { catalog as baseCatalog } from "../../data/hirono-catalog.js";
 
 export type Category = "figures" | "plush" | "accessories" | "collaborations";
 export type Rarity = "standard" | "secret" | "special";
+export type CatalogTag = "mixed-ip";
+export type SourceKind = "official" | "official-archive";
 
 export interface CollectibleItem {
   id: string;
@@ -19,8 +21,8 @@ export interface CollectibleItem {
 export interface Release {
   id: string;
   name: string;
-  releaseDate: string;
-  year: number;
+  releaseDate: string | null;
+  year: number | null;
   type: string;
   category: Category;
   collectionType: "blind-box" | "standalone";
@@ -28,6 +30,8 @@ export interface Release {
   description?: string;
   palette?: [string, string];
   sourceUrl?: string;
+  sourceKind: SourceKind;
+  tags: CatalogTag[];
   coverImage: string | null;
   status?: "upcoming";
   items: CollectibleItem[];
@@ -63,7 +67,15 @@ export const releases: Release[] = (baseCatalog as BaseRelease[])
       items,
     };
   })
-  .sort((a, b) => a.releaseDate.localeCompare(b.releaseDate));
+  .sort((a, b) => {
+    if (a.releaseDate && b.releaseDate) return a.releaseDate.localeCompare(b.releaseDate);
+    if (a.releaseDate) return -1;
+    if (b.releaseDate) return 1;
+    if (a.year && b.year && a.year !== b.year) return a.year - b.year;
+    if (a.year) return -1;
+    if (b.year) return 1;
+    return a.name.localeCompare(b.name);
+  });
 
 export const allReleasedItemIds = new Set(
   releases.filter((release) => release.status !== "upcoming").flatMap((release) => release.items.map((item) => item.id)),

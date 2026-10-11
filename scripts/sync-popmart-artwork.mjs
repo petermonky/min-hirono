@@ -58,7 +58,6 @@ const curatedRemoteArtwork = {
   "hirono-city-of-mercy-fallen-angel": "https://prod-america-res.popmart.com/default/5_5U3lmtrRCp_1200x1200.jpg",
   "hirono-city-of-mercy-echo": "https://prod-america-res.popmart.com/default/7_ygoEvalgiP_1200x1200.jpg",
   "hirono-city-of-mercy-belonging": "https://prod-america-res.popmart.com/default/6_MBMgg8S54Y_1200x1200.jpg",
-  "hirono-city-of-mercy-wandering-special": "https://scontent-lhr6-2.xx.fbcdn.net/v/t39.30808-6/727497591_10163543481550805_5145842944011074960_n.jpg?stp=dst-jpg_tt6&cstp=mx918x918&ctp=s918x918&_nc_cat=105&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=-12G8T_pnR4Q7kNvwHUZSOz&_nc_oc=Adoj2G1jrN9GDGWfWnD4S_xCL1kRF0KwCMRB4sy_Zo6O6xLxOQGTjwf3FHSoY3S_tg0&_nc_zt=23&_nc_ht=scontent-lhr6-2.xx&_nc_gid=IqrAR7_Zj_mBtqbQtrn0Ig&_nc_ss=7b289&oh=00_AQMk_sj2zqxYNp129Fw6F0wO5r7e3ZvpKnCB7i_UggwmJw&oe=6AC49AEE"
 };
 
 const curatedRemoteCovers = {

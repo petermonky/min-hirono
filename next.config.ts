@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "global-static.popmart.com" },
       { protocol: "https", hostname: "prod-global-biz.popmart.com" },
       { protocol: "https", hostname: "prod-america-res.popmart.com" },
-      { protocol: "https", hostname: "cdn.shopify.com" },
+      { protocol: "https", hostname: "prod-eurasian-res.popmart.com" },
     ],
   },
 };
