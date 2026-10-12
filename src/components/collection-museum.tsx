@@ -27,7 +27,7 @@ const ownershipOptions: Array<{ value: OwnershipFilter; label: string }> = [
   { value: "missing", label: "Missing" },
 ];
 
-function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "arrow" | "filter" | "x" | "check"; className?: string }) {
+function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "arrow" | "filter" | "x" | "check" | "user"; className?: string }) {
   const paths = {
     search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
     chevron: <path d="m7 10 5 5 5-5" />,
@@ -35,6 +35,7 @@ function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "ar
     filter: <><path d="M4 7h16" /><path d="M7 12h10" /><path d="M10 17h4" /></>,
     x: <><path d="m6 6 12 12" /><path d="m18 6-12 12" /></>,
     check: <path d="m5 12 4 4L19 6" />,
+    user: <><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20c.8-3.7 3-5.5 6.5-5.5s5.7 1.8 6.5 5.5" /></>,
   };
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -286,7 +287,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
   );
 }
 
-export function CollectionMuseum({ releases, initialOwned }: { releases: Release[]; initialOwned: string[] }) {
+export function CollectionMuseum({ releases, initialOwned, username }: { releases: Release[]; initialOwned: string[]; username: string }) {
   const router = useRouter();
   const validIds = useMemo(() => new Set(releases.filter((release) => release.status !== "upcoming").flatMap((release) => release.items.map((item) => item.id))), [releases]);
   const [owned, setOwned] = useState(() => new Set(initialOwned.filter((id) => validIds.has(id))));
@@ -696,6 +697,15 @@ export function CollectionMuseum({ releases, initialOwned }: { releases: Release
       </dialog>
 
       <div role="status" aria-live="polite" className={`fixed bottom-5 left-1/2 z-50 -translate-x-1/2 bg-ink px-5 py-3 text-xs text-canvas transition-all duration-200 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}>{toast}</div>
+
+      <div className="group fixed bottom-5 right-5 z-40" tabIndex={0} aria-label={`Signed in as ${username}`}>
+        <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
+          {username}
+        </span>
+        <span className="grid size-12 place-items-center rounded-full border border-ink bg-canvas text-ink shadow-[3px_3px_0_#111]">
+          <Icon name="user" className="size-5" />
+        </span>
+      </div>
     </>
   );
 }

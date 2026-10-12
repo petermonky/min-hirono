@@ -79,11 +79,12 @@ The implementation source of truth is `src/app/globals.css`. Use its semantic Ta
 
 ### Access gate
 
-- The private archive opens with a single centered passcode form on the white app canvas.
+- The private archive opens with a single centered username-and-password form on the white app canvas.
 - Use the regular app canvas rather than the soft-gray section surface.
 - Center the Hirono head at 48px without visible title text; retain a screen-reader-only `your hirono` heading. Use the high-resolution source asset at this compact display size for crisp rendering.
-- Keep the passcode field and primary action large enough for mobile entry.
+- Keep both account fields and the primary action large enough for mobile entry.
 - Authentication language should feel personal and quiet; avoid account-management or enterprise terminology.
+- Show the signed-in account as a fixed circular icon in the lower-right corner. Its username appears only on hover or keyboard focus; do not attach a menu or additional account details.
 
 ### Entry point
 

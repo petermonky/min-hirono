@@ -4,7 +4,7 @@ import {
   createSessionToken,
   SESSION_COOKIE,
   sessionCookieOptions,
-  verifyPasscode,
+  verifyCredentials,
 } from "@/lib/session";
 
 const attempts = new Map<string, { count: number; resetAt: number }>();
@@ -35,25 +35,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Too many attempts. Try again in a few minutes." }, { status: 429 });
   }
 
-  let passcode = "";
+  let username = "";
+  let password = "";
   try {
     const payload = await request.json();
-    if (typeof payload.passcode === "string" && payload.passcode.length <= 256) passcode = payload.passcode;
+    if (typeof payload.username === "string" && payload.username.length <= 64) username = payload.username;
+    if (typeof payload.password === "string" && payload.password.length <= 256) password = payload.password;
   } catch {
-    return NextResponse.json({ error: "Enter the archive passcode." }, { status: 400 });
+    return NextResponse.json({ error: "Enter your username and password." }, { status: 400 });
   }
 
   try {
-    if (!verifyPasscode(passcode)) {
+    const authenticatedUsername = username && password ? await verifyCredentials(username, password) : null;
+    if (!authenticatedUsername) {
       state.count += 1;
       await new Promise((resolve) => setTimeout(resolve, 450));
-      return NextResponse.json({ error: "That passcode is not quite right." }, { status: 401 });
+      return NextResponse.json({ error: "Username or password is incorrect." }, { status: 401 });
     }
 
     attempts.delete(id);
-    await getOwnedCollectibleIds();
-    const response = NextResponse.json({ ok: true });
-    response.cookies.set(SESSION_COOKIE, createSessionToken(), sessionCookieOptions);
+    await getOwnedCollectibleIds(authenticatedUsername);
+    const response = NextResponse.json({ ok: true, username: authenticatedUsername });
+    response.cookies.set(SESSION_COOKIE, createSessionToken(authenticatedUsername), sessionCookieOptions);
     return response;
   } catch (error) {
     console.error(error);
