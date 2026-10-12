@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { KeyboardEvent, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { Icon } from "@/components/icon";
 import type { Category, CollectibleItem, Release } from "@/lib/catalog";
 
 const STORAGE_KEY = "hironoCollectionV2";
@@ -26,20 +28,6 @@ const ownershipOptions: Array<{ value: OwnershipFilter; label: string }> = [
   { value: "owned", label: "Owned" },
   { value: "missing", label: "Missing" },
 ];
-
-function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "arrow" | "filter" | "x" | "check" | "user" | "logout"; className?: string }) {
-  const paths = {
-    search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
-    chevron: <path d="m7 10 5 5 5-5" />,
-    arrow: <><path d="M5 12h14" /><path d="m14 7 5 5-5 5" /></>,
-    filter: <><path d="M4 7h16" /><path d="M7 12h10" /><path d="M10 17h4" /></>,
-    x: <><path d="m6 6 12 12" /><path d="m18 6-12 12" /></>,
-    check: <path d="m5 12 4 4L19 6" />,
-    user: <><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20c.8-3.7 3-5.5 6.5-5.5s5.7 1.8 6.5 5.5" /></>,
-    logout: <><path d="M10 5H5v14h5" /><path d="M14 8l4 4-4 4" /><path d="M8 12h10" /></>,
-  };
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
-}
 
 function ArtworkPlaceholder({ name }: { name: string }) {
   return (
@@ -305,7 +293,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
   const [showHeaderProgress, setShowHeaderProgress] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [accountCanHover, setAccountCanHover] = useState(false);
-  const [logoutHovered, setLogoutHovered] = useState(false);
+  const [hoveredAccountAction, setHoveredAccountAction] = useState<"settings" | "logout" | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const progressSectionRef = useRef<HTMLElement>(null);
@@ -328,7 +316,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
     const updateInputMode = () => {
       setAccountCanHover(hoverQuery.matches);
       setAccountOpen(false);
-      setLogoutHovered(false);
+      setHoveredAccountAction(null);
     };
     updateInputMode();
     hoverQuery.addEventListener("change", updateInputMode);
@@ -739,44 +727,62 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
         onMouseLeave={() => {
           if (!accountCanHover) return;
           setAccountOpen(false);
-          setLogoutHovered(false);
+          setHoveredAccountAction(null);
         }}
         onFocusCapture={() => { if (accountCanHover) setAccountOpen(true); }}
         onBlurCapture={(event) => {
           if (accountCanHover && !event.currentTarget.contains(event.relatedTarget)) {
             setAccountOpen(false);
-            setLogoutHovered(false);
+            setHoveredAccountAction(null);
           }
         }}
       >
         <span
           role="tooltip"
-          className={`pointer-events-none absolute bottom-[72px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || logoutHovered) ? "opacity-100" : "opacity-0"}`}
+          className={`pointer-events-none absolute bottom-[120px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "settings") ? "opacity-100" : "opacity-0"}`}
+        >
+          Settings
+        </span>
+        <span
+          role="tooltip"
+          className={`pointer-events-none absolute bottom-[72px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "logout") ? "opacity-100" : "opacity-0"}`}
         >
           Log out
         </span>
-        <div className={`relative w-12 overflow-hidden rounded-full border border-ink bg-canvas text-ink transition-[height] duration-200 ease-out ${accountOpen ? "h-24" : "h-12"}`}>
+        <div className={`relative w-12 overflow-hidden rounded-full border border-ink bg-canvas text-ink transition-[height] duration-200 ease-out ${accountOpen ? "h-36" : "h-12"}`}>
           <button
             type="button"
             onClick={() => { if (!accountCanHover) setAccountOpen((open) => !open); }}
             aria-expanded={accountOpen}
             aria-controls="account-actions"
             aria-label={accountOpen ? "Close account actions" : `Open account actions for ${username}`}
-            className="absolute bottom-px left-1/2 grid size-[46px] -translate-x-1/2 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus"
+            className="absolute inset-x-0 bottom-0 grid h-12 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus"
           >
             <Icon name="user" className="size-5" />
           </button>
-          <div id="account-actions" aria-hidden={!accountOpen} className={`absolute bottom-12 left-0 size-12 ${accountOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+          <div id="account-actions" aria-hidden={!accountOpen} className={`absolute inset-x-0 bottom-12 flex h-24 flex-col ${accountOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+            <Link
+              href="/settings"
+              onMouseEnter={() => setHoveredAccountAction("settings")}
+              onMouseLeave={() => setHoveredAccountAction(null)}
+              onFocus={() => setHoveredAccountAction("settings")}
+              onBlur={() => setHoveredAccountAction(null)}
+              tabIndex={accountOpen ? 0 : -1}
+              aria-label="Settings"
+              className={`grid h-12 w-full shrink-0 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            >
+              <Icon name="settings" className="size-5" />
+            </Link>
             <button
               type="button"
               onClick={lockArchive}
-              onMouseEnter={() => setLogoutHovered(true)}
-              onMouseLeave={() => setLogoutHovered(false)}
-              onFocus={() => setLogoutHovered(true)}
-              onBlur={() => setLogoutHovered(false)}
+              onMouseEnter={() => setHoveredAccountAction("logout")}
+              onMouseLeave={() => setHoveredAccountAction(null)}
+              onFocus={() => setHoveredAccountAction("logout")}
+              onBlur={() => setHoveredAccountAction(null)}
               tabIndex={accountOpen ? 0 : -1}
               aria-label="Log out"
-              className={`absolute bottom-px left-1/2 grid size-[46px] -translate-x-1/2 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+              className={`grid h-12 w-full shrink-0 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
             >
               <Icon name="logout" className="size-5" />
             </button>

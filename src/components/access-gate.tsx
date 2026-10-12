@@ -60,7 +60,7 @@ export function AccessGate() {
           <div className="mt-3 min-h-5" aria-live="polite">
             {error && <p id="account-error" className="text-xs font-medium text-error">{error}</p>}
           </div>
-          <button type="submit" disabled={submitting || !username || !password} className="chunky-button mt-5 h-14 w-full border-ink bg-ink px-6 text-xs font-bold uppercase text-canvas hover:border-primary hover:bg-primary hover:text-on-primary">
+          <button type="submit" disabled={submitting} className="chunky-button mt-5 h-11 w-full border-ink bg-ink px-5 text-[10px] uppercase text-canvas">
             {submitting ? "Signing in…" : "Sign in"}
           </button>
         </form>

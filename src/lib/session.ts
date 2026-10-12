@@ -76,6 +76,15 @@ export async function verifyCredentials(username: string, password: string) {
   return typeof data === "string" && data ? data : null;
 }
 
+export async function updateAccountPassword(username: string, password: string) {
+  const { data, error } = await getSupabaseAdmin().rpc("update_account_password", {
+    p_username: username,
+    p_password: password,
+  });
+  if (error) throw new Error(`Unable to update the account password: ${error.message}`);
+  if (data !== true) throw new Error("Account not found.");
+}
+
 export const sessionCookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
