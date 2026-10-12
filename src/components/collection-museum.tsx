@@ -27,7 +27,7 @@ const ownershipOptions: Array<{ value: OwnershipFilter; label: string }> = [
   { value: "missing", label: "Missing" },
 ];
 
-function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "arrow" | "filter" | "x" | "check" | "user"; className?: string }) {
+function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "arrow" | "filter" | "x" | "check" | "user" | "logout"; className?: string }) {
   const paths = {
     search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
     chevron: <path d="m7 10 5 5 5-5" />,
@@ -36,6 +36,7 @@ function Icon({ name, className = "size-4" }: { name: "search" | "chevron" | "ar
     x: <><path d="m6 6 12 12" /><path d="m18 6-12 12" /></>,
     check: <path d="m5 12 4 4L19 6" />,
     user: <><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20c.8-3.7 3-5.5 6.5-5.5s5.7 1.8 6.5 5.5" /></>,
+    logout: <><path d="M10 5H5v14h5" /><path d="M14 8l4 4-4 4" /><path d="M8 12h10" /></>,
   };
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -302,9 +303,13 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
   const [confirmation, setConfirmation] = useState<Confirmation>(null);
   const [toast, setToast] = useState("");
   const [showHeaderProgress, setShowHeaderProgress] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [accountCanHover, setAccountCanHover] = useState(false);
+  const [logoutHovered, setLogoutHovered] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const progressSectionRef = useRef<HTMLElement>(null);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -312,10 +317,39 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
         event.preventDefault();
         searchRef.current?.focus();
       }
+      if (event.key === "Escape") setAccountOpen(false);
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  useEffect(() => {
+    const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const updateInputMode = () => {
+      setAccountCanHover(hoverQuery.matches);
+      setAccountOpen(false);
+      setLogoutHovered(false);
+    };
+    updateInputMode();
+    hoverQuery.addEventListener("change", updateInputMode);
+    return () => hoverQuery.removeEventListener("change", updateInputMode);
+  }, []);
+
+  useEffect(() => {
+    if (!accountOpen) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (!accountMenuRef.current?.contains(event.target as Node)) setAccountOpen(false);
+    };
+    const closeOnScroll = () => {
+      if (!accountCanHover) setAccountOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    window.addEventListener("scroll", closeOnScroll, { passive: true });
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      window.removeEventListener("scroll", closeOnScroll);
+    };
+  }, [accountCanHover, accountOpen]);
 
   useEffect(() => {
     if (confirmation) dialogRef.current?.showModal();
@@ -443,6 +477,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
   };
 
   const lockArchive = async () => {
+    setAccountOpen(false);
     await fetch("/api/session", { method: "DELETE" });
     router.refresh();
   };
@@ -678,7 +713,6 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
       <footer className="bg-black text-white">
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-end gap-5 px-5 py-10 md:px-8">
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={lockArchive} className="chunky-button h-11 border-white bg-black px-4 text-[10px] uppercase text-white hover:bg-white hover:text-black">Lock archive</button>
             <button type="button" onClick={reset} className="chunky-button h-11 border-transparent bg-primary px-4 text-[10px] uppercase text-on-primary">Reset</button>
           </div>
         </div>
@@ -698,13 +732,56 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
 
       <div role="status" aria-live="polite" className={`fixed bottom-5 left-1/2 z-50 -translate-x-1/2 bg-ink px-5 py-3 text-xs text-canvas transition-all duration-200 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}>{toast}</div>
 
-      <div className="group fixed bottom-5 right-5 z-40" tabIndex={0} aria-label={`Signed in as ${username}`}>
-        <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
-          {username}
+      <div
+        ref={accountMenuRef}
+        className="fixed bottom-5 right-5 z-40"
+        onMouseEnter={() => { if (accountCanHover) setAccountOpen(true); }}
+        onMouseLeave={() => {
+          if (!accountCanHover) return;
+          setAccountOpen(false);
+          setLogoutHovered(false);
+        }}
+        onFocusCapture={() => { if (accountCanHover) setAccountOpen(true); }}
+        onBlurCapture={(event) => {
+          if (accountCanHover && !event.currentTarget.contains(event.relatedTarget)) {
+            setAccountOpen(false);
+            setLogoutHovered(false);
+          }
+        }}
+      >
+        <span
+          role="tooltip"
+          className={`pointer-events-none absolute bottom-[72px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || logoutHovered) ? "opacity-100" : "opacity-0"}`}
+        >
+          Log out
         </span>
-        <span className="grid size-12 place-items-center rounded-full border border-ink bg-canvas text-ink shadow-[3px_3px_0_#111]">
-          <Icon name="user" className="size-5" />
-        </span>
+        <div className={`relative w-12 overflow-hidden rounded-full border border-ink bg-canvas text-ink transition-[height] duration-200 ease-out ${accountOpen ? "h-24" : "h-12"}`}>
+          <button
+            type="button"
+            onClick={() => { if (!accountCanHover) setAccountOpen((open) => !open); }}
+            aria-expanded={accountOpen}
+            aria-controls="account-actions"
+            aria-label={accountOpen ? "Close account actions" : `Open account actions for ${username}`}
+            className="absolute bottom-px left-1/2 grid size-[46px] -translate-x-1/2 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus"
+          >
+            <Icon name="user" className="size-5" />
+          </button>
+          <div id="account-actions" aria-hidden={!accountOpen} className={`absolute bottom-12 left-0 size-12 ${accountOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+            <button
+              type="button"
+              onClick={lockArchive}
+              onMouseEnter={() => setLogoutHovered(true)}
+              onMouseLeave={() => setLogoutHovered(false)}
+              onFocus={() => setLogoutHovered(true)}
+              onBlur={() => setLogoutHovered(false)}
+              tabIndex={accountOpen ? 0 : -1}
+              aria-label="Log out"
+              className={`absolute bottom-px left-1/2 grid size-[46px] -translate-x-1/2 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            >
+              <Icon name="logout" className="size-5" />
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );
