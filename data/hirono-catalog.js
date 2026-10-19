@@ -136,7 +136,7 @@
   },
   {
     "id": "celebrating-the-moment-popmart-15th-annivesary-series",
-    "name": "Celebrating The Moment-Popmart 15th Annivesary Series",
+    "name": "Celebrating The Moment-Popmart 15th Anniversary Series",
     "releaseDate": "2025-10-23",
     "releaseYear": 2025,
     "type": "Figure",
