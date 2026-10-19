@@ -13,9 +13,6 @@ comment on table public.accounts is
 alter table public.accounts enable row level security;
 revoke all on table public.accounts from anon, authenticated;
 
-insert into public.accounts (username, password_hash)
-values ('min', '$2a$12$x9bcze822wbBp2KdD0nvoO.4Clgv95D2Y3anmwsnoxD.cS7epTvlu');
-
 alter table public.collection_items
   add constraint collection_items_account_username_fkey
   foreign key (account_username)
