@@ -584,7 +584,7 @@ export function CollectionMuseum({ releases, initialOwned, initialWishlist, user
             aria-expanded={accountOpen}
             aria-controls="account-actions"
             aria-label={accountOpen ? "Close account actions" : `Open account actions for ${username}`}
-            className="absolute inset-x-0 bottom-0 grid h-12 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus"
+            className="absolute inset-x-0 bottom-0 grid h-[46px] place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus"
           >
             <Avatar path={avatarPath} className={avatarPath ? "size-9" : "size-5"} iconClassName="size-5" />
           </button>
