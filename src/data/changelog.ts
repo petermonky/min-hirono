@@ -14,19 +14,19 @@ export const changelog: ReadonlyArray<ChangelogRelease> = [
     updates: [
       {
         title: "Find and invite friends",
-        description: "Search for an exact username in Friends and tap their row to send an invitation. Incoming invites appear above your friends, where you can accept or decline them. Accepting connects both collectors and unlocks collection browsing.",
+        description: "Search for a full username in Friends, ignoring uppercase and lowercase, then tap the matching row to invite them. Pending invitations are marked Invited. Incoming requests appear under Invites, with check and cross buttons to accept or decline. Accepting adds each collector to the other’s friends list.",
       },
       {
         title: "Meet your fellow collectors",
-        description: "Open Friends from the account tray to see your connected friends, with their usernames, profile pictures, and collection progress. Friendships are mutual; new accounts are no longer connected to everyone by default.",
+        description: "Open Friends from the account tray to see your current friends, their profile pictures, and their collection progress. The heading and search stay visible while scrolling. New accounts start without friends; only accepted connections can browse each other’s collections.",
       },
       {
         title: "Explore a friend’s collection",
-        description: "Click a friend to browse their owned items and wishlist in separate views, with search and filters. Only their saved items appear, and browsing never changes either person’s collection.",
+        description: "Tap a friend’s row to open their profile and switch between Owned and Wishlist. Search and filter their saved items without seeing the entire catalog. Collection progress counts released items only, and browsing cannot change either person’s collection or wishlist.",
       },
       {
         title: "Your own profile picture",
-        description: "Choose a photo in Settings, drag and zoom to crop it, and preview its circular frame. Pinch to zoom on mobile; a small overview helps you keep your place. Your picture appears in Settings and the account tray.",
+        description: "Tap your picture or its camera icon in Settings to choose a photo. Drag, use the zoom slider, or pinch on mobile to crop it, with a circular preview and an overview that appears while adjusting. Your saved picture appears in Settings, the account tray, and Friends.",
       },
       {
         title: "Save your wishlist",
@@ -34,7 +34,11 @@ export const changelog: ReadonlyArray<ChangelogRelease> = [
       },
       {
         title: "A clearer collection view",
-        description: "Missing items now look more muted, making your collected items easier to spot. Item thumbnails have a cleaner layout without the corner checkbox. On desktop and mobile, the Filters button opens a panel while leaving room for search.",
+        description: "Missing items look more muted, making collected items easier to spot, and thumbnails no longer have a corner checkbox. Progress bars are slightly thicker. On desktop and mobile, the Filters button opens a panel while leaving room for search.",
+      },
+      {
+        title: "Less image reloading",
+        description: "Profile pictures and product images can now stay cached for a day, reducing repeat downloads as you navigate or return to the app. Changing your profile picture still displays the new photo immediately.",
       },
       {
         title: "Keep up with what’s new",
