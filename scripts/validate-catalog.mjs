@@ -79,8 +79,12 @@ const validateExternalArtwork = (kind, entries, validIds) => {
 validateExternalArtwork("item", externalArtwork.items, itemIds);
 validateExternalArtwork("cover", externalArtwork.covers, releaseIds);
 
-assert(catalog.length === 61, "unexpected total release count");
-assert(itemIds.size === 267, "unexpected collectible count");
+assert(catalog.length === 62, "unexpected total release count");
+assert(itemIds.size === 268, "unexpected collectible count");
+assert(catalog.find((release) => release.id === "hirono-harry-potter")?.status !== "upcoming", "Harry Potter must count toward collection completion");
+const snowman = catalog.find((release) => release.id === "hirono-snowman");
+assert(snowman?.releaseDate === "2026-10-22" && snowman.status === "upcoming", "Snowman must retain its official upcoming release date");
+assert(snowman?.items.length === 1 && snowman.items[0].image?.src, "Snowman must include its official product image");
 assert(catalog.filter((release) => release.tags.includes("mixed-ip")).length === 15, "unexpected mixed-IP release count");
 assert(catalog.find((release) => release.id === "hirono-little-hare-plush")?.items.length === 2, "Little Hare must include regular and special versions");
 assert(releaseIds.has("hirono-shanghai-pts-limited-figures"), "HIRONO Doll Panda is missing");

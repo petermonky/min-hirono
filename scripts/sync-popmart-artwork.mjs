@@ -32,7 +32,8 @@ const officialPages = {
   "hirono-after-dark-night-light": "https://www.popmart.com/us/products/8756/hirono-after-dark-series-night-light-charm-blind-box",
   "hirono-the-hundreds-figure": "https://www.popmart.com/us/products/8750/hirono-%C3%97-the-hundreds-figure",
   "hirono-the-hundreds-pendant": "https://www.popmart.com/us/products/8749/hirono-%C3%97-the-hundreds-pendant",
-  "hirono-harry-potter": "https://www.popmart.com/us/products/9119/hirono-%C3%97-harry-potter-series-figures"
+  "hirono-harry-potter": "https://www.popmart.com/us/products/9119/hirono-%C3%97-harry-potter-series-figures",
+  "hirono-snowman": "https://www.popmart.com/us/products/9302/hirono-snowman-figurine"
 };
 
 // POP MART's US page currently exposes unrelated Ahsoka thumbnails for this

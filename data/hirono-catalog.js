@@ -1223,8 +1223,7 @@
       category: "collaborations",
       collectionType: "blind-box",
       collaboration: "Harry Potter",
-      status: "upcoming",
-      description: "An upcoming magical collaboration. It is visible in the archive but excluded from completion until release.",
+      description: "A magical HIRONO collaboration featuring characters from Harry Potter, released October 8, 2026.",
       palette: ["#776856", "#3f3a36"],
       sourceUrl: "https://www.popmart.com/us/products/9119/hirono-%C3%97-harry-potter-series-figures",
       itemNames: [
@@ -1260,6 +1259,21 @@
         "https://prod-global-biz.popmart.com/globalAdmin/1790751969536_e2dea29bee5b2b187357e0b3a32f436a.jpg"
       ],
       secretOdds: "TBA"
+    }),
+    release({
+      id: "hirono-snowman",
+      name: "Hirono Snowman Figurine",
+      releaseDate: "2026-10-22",
+      type: "Figure",
+      category: "figures",
+      collectionType: "standalone",
+      status: "upcoming",
+      description: "A snowman-themed HIRONO figurine, approximately 15 cm tall, in ABS, PVC, and polyamide. Official US online release: October 22, 2026.",
+      palette: ["#ece7df", "#77746e"],
+      sourceUrl: "https://www.popmart.com/us/products/9302/hirono-snowman-figurine",
+      coverImage: "https://prod-global-biz.popmart.com/globalAdmin/1792139273832_2fe14cbe6691770b86465860d009c38a.jpg",
+      itemNames: ["Snowman"],
+      itemImages: ["https://prod-global-biz.popmart.com/globalAdmin/1792139273832_2fe14cbe6691770b86465860d009c38a.jpg"]
     })
   ];
 
