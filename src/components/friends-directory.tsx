@@ -160,9 +160,9 @@ export function FriendsDirectory({ initialData, total }: { initialData: FriendsD
       <ul className="divide-y divide-hairline border-y border-hairline">
         {directory.invitations.map((invite) => <li key={invite.id}>
           <ProfileRow person={invite} total={total}>
-            <div className="-mr-3.5 flex shrink-0">
-              <button type="button" disabled={busy.has(invite.id)} onClick={() => void action(invite.id, { id: invite.id, action: "accept" })} aria-label={`Accept friend invite from ${invite.username}`} className="grid size-11 place-items-center text-mute"><Icon name="check" className="size-4" /></button>
-              <button type="button" disabled={busy.has(invite.id)} onClick={() => void action(invite.id, { id: invite.id, action: "reject" })} aria-label={`Reject friend invite from ${invite.username}`} className="grid size-11 place-items-center text-mute"><Icon name="x" className="size-4" /></button>
+            <div className="-mr-2 flex shrink-0">
+              <button type="button" disabled={busy.has(invite.id)} onClick={() => void action(invite.id, { id: invite.id, action: "accept" })} aria-label={`Accept friend invite from ${invite.username}`} className="grid h-11 w-8 place-items-center text-mute"><Icon name="check" className="size-4" /></button>
+              <button type="button" disabled={busy.has(invite.id)} onClick={() => void action(invite.id, { id: invite.id, action: "reject" })} aria-label={`Reject friend invite from ${invite.username}`} className="grid h-11 w-8 place-items-center text-mute"><Icon name="x" className="size-4" /></button>
             </div>
           </ProfileRow>
         </li>)}
