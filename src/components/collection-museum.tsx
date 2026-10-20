@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { KeyboardEvent, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
+import { Avatar } from "@/components/avatar";
+import { ChangelogModal } from "@/components/changelog-modal";
 import type { Category, CollectibleItem, Release } from "@/lib/catalog";
 
 const STORAGE_KEY = "hironoCollectionV2";
 const releaseDateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
-type OwnershipFilter = "all" | "owned" | "missing";
+type OwnershipFilter = "all" | "owned" | "missing" | "wishlist";
 type CategoryFilter = "all" | Category;
 type TagFilter = "all" | "mixed-ip";
 type Confirmation = { title: string; body: string; actionLabel: string; action: () => void } | null;
@@ -27,6 +29,7 @@ const ownershipOptions: Array<{ value: OwnershipFilter; label: string }> = [
   { value: "all", label: "All" },
   { value: "owned", label: "Owned" },
   { value: "missing", label: "Missing" },
+  { value: "wishlist", label: "Wishlist" },
 ];
 
 function ArtworkPlaceholder({ name }: { name: string }) {
@@ -153,12 +156,15 @@ function FilterRail({ label, children }: { label: string; children: React.ReactN
   );
 }
 
-const ItemCard = memo(function ItemCard({ item, owned, disabled, pending, onToggle }: {
+const ItemCard = memo(function ItemCard({ item, owned, disabled, pending, wishlisted, wishlistPending, onToggle, onToggleWishlist }: {
   item: CollectibleItem;
   owned: boolean;
   disabled: boolean;
   pending: boolean;
+  wishlisted: boolean;
+  wishlistPending: boolean;
   onToggle: (id: string) => void;
+  onToggleWishlist: (id: string) => void;
 }) {
   const [justToggled, setJustToggled] = useState(false);
 
@@ -169,13 +175,14 @@ const ItemCard = memo(function ItemCard({ item, owned, disabled, pending, onTogg
   };
 
   return (
+    <div className="relative min-w-0">
     <button
       type="button"
       onClick={handleClick}
       disabled={disabled || pending}
       aria-pressed={owned}
       aria-label={`${item.name} — ${disabled ? "coming soon" : pending ? "saving" : owned ? "owned, mark as missing" : "missing, mark as owned"}`}
-      className={`store-grid-card group min-w-0 text-left ${justToggled ? "item-enter" : ""}`}
+      className={`store-grid-card group w-full min-w-0 text-left ${justToggled ? "item-enter" : ""}`}
     >
       <span className={`collectible-frame relative block aspect-square overflow-hidden bg-canvas-soft transition-all duration-200 ease-museum ${
         owned ? "border-ink" : "group-hover:border-hairline-strong"
@@ -185,30 +192,40 @@ const ItemCard = memo(function ItemCard({ item, owned, disabled, pending, onTogg
             {item.rarity === "secret" ? "✦ Secret" : "Special"}
           </span>
         )}
-        {item.odds && <span className="absolute right-0 top-0 z-10 bg-canvas px-2 py-1.5 text-[9px] font-semibold text-secondary">{item.odds}</span>}
-        <span className={`store-grid-image absolute inset-0 transition-opacity duration-200 ${owned ? "opacity-100" : "opacity-70 group-hover:opacity-90"}`}>
+        {item.odds && <span className="absolute bottom-0 left-0 z-10 bg-canvas px-2 py-1.5 text-[9px] font-semibold text-secondary">{item.odds}</span>}
+        <span className={`store-grid-image absolute inset-0 transition-[opacity,filter] duration-200 ${owned ? "opacity-100" : "opacity-50 grayscale-[40%] group-hover:opacity-70"}`}>
           <MuseumImage item={item} sizes="(max-width: 640px) 44vw, (max-width: 1024px) 28vw, 190px" />
-        </span>
-        <span className={`absolute bottom-0 right-0 z-10 grid size-8 place-items-center border transition-colors duration-200 ${
-          owned ? "border-primary bg-primary text-on-primary" : "border-hairline-strong bg-canvas text-transparent"
-        }`} aria-hidden="true">
-          <Icon name="check" className="size-4" />
         </span>
       </span>
       <span className="mt-3 block truncate text-xs font-semibold text-ink">{item.name}</span>
     </button>
+      <button
+        type="button"
+        onClick={() => onToggleWishlist(item.id)}
+        disabled={wishlistPending}
+        aria-pressed={wishlisted}
+        aria-label={`${wishlisted ? "Remove" : "Add"} ${item.name} ${wishlisted ? "from" : "to"} wishlist`}
+        aria-busy={wishlistPending}
+        className={`absolute right-0 top-0 z-20 grid size-11 place-items-center ${wishlisted ? "text-primary" : "text-mute"}`}
+      >
+        <Icon name="heart" className={`size-6 stroke-[1.2] transition-[fill,stroke,color] duration-150 ${wishlisted ? "fill-primary stroke-primary" : "fill-mute/55 stroke-hairline-strong/60"}`} />
+      </button>
+    </div>
   );
 });
 
-function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filteredOpen, onToggleOpen, onToggleItem, onClear }: {
+function ReleaseCard({ release, visibleItems, owned, pendingItemIds, wishlist, pendingWishlistIds, open, filteredOpen, onToggleOpen, onToggleItem, onToggleWishlist, onClear }: {
   release: Release;
   visibleItems: CollectibleItem[];
   owned: Set<string>;
   pendingItemIds: Set<string>;
+  wishlist: Set<string>;
+  pendingWishlistIds: Set<string>;
   open: boolean;
   filteredOpen: boolean;
   onToggleOpen: () => void;
   onToggleItem: (id: string) => void;
+  onToggleWishlist: (id: string) => void;
   onClear: () => void;
 }) {
   const ownedCount = release.items.filter((item) => owned.has(item.id)).length;
@@ -265,7 +282,7 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
               {visibleItems.map((item) => (
-                <ItemCard key={item.id} item={item} owned={owned.has(item.id)} disabled={upcoming} pending={pendingItemIds.has(item.id)} onToggle={onToggleItem} />
+                <ItemCard key={item.id} item={item} owned={owned.has(item.id)} disabled={upcoming} pending={pendingItemIds.has(item.id)} wishlisted={wishlist.has(item.id)} wishlistPending={pendingWishlistIds.has(item.id)} onToggle={onToggleItem} onToggleWishlist={onToggleWishlist} />
               ))}
             </div>
             {filteredOpen && <p className="mt-8 border-t border-hairline pt-4 text-xs text-mute">This release is expanded while filters are active.</p>}
@@ -276,11 +293,16 @@ function ReleaseCard({ release, visibleItems, owned, pendingItemIds, open, filte
   );
 }
 
-export function CollectionMuseum({ releases, initialOwned, username }: { releases: Release[]; initialOwned: string[]; username: string }) {
+export function CollectionMuseum({ releases, initialOwned, initialWishlist, username, avatarPath }: { releases: Release[]; initialOwned: string[]; initialWishlist: string[]; username: string; avatarPath: string | null }) {
   const router = useRouter();
   const validIds = useMemo(() => new Set(releases.filter((release) => release.status !== "upcoming").flatMap((release) => release.items.map((item) => item.id))), [releases]);
   const [owned, setOwned] = useState(() => new Set(initialOwned.filter((id) => validIds.has(id))));
   const [pendingItemIds, setPendingItemIds] = useState<Set<string>>(new Set());
+  const [wishlist, setWishlist] = useState(() => new Set(initialWishlist));
+  const wishlistRef = useRef(new Set(initialWishlist));
+  const wishlistRequests = useRef(new Set<string>());
+  const wishlistVersion = useRef(0);
+  const [pendingWishlistIds, setPendingWishlistIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const [category, setCategory] = useState<CategoryFilter>("all");
@@ -293,14 +315,17 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
   const [showHeaderProgress, setShowHeaderProgress] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [accountCanHover, setAccountCanHover] = useState(false);
-  const [hoveredAccountAction, setHoveredAccountAction] = useState<"settings" | "logout" | null>(null);
+  const [changelogOpen, setChangelogOpen] = useState(false);
+  const [hoveredAccountAction, setHoveredAccountAction] = useState<"changelog" | "logout" | "settings" | "friends" | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const progressSectionRef = useRef<HTMLElement>(null);
   const accountMenuRef = useRef<HTMLDivElement>(null);
+  const accountButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.target instanceof Element && event.target.closest("dialog")) return;
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
         event.preventDefault();
         searchRef.current?.focus();
@@ -372,9 +397,53 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
     setOwned(new Set((payload.owned as string[]).filter((id) => validIds.has(id))));
   }, [router, validIds]);
 
+  const refreshWishlist = useCallback(async () => {
+    if (wishlistRequests.current.size) return;
+    const version = wishlistVersion.current;
+    const response = await fetch("/api/wishlist", { cache: "no-store" });
+    if (response.status === 401) { router.refresh(); return; }
+    if (!response.ok) throw new Error("Wishlist refresh failed");
+    const payload = await response.json();
+    if (version !== wishlistVersion.current || wishlistRequests.current.size) return;
+    wishlistRef.current = new Set(payload.wishlist as string[]);
+    setWishlist(new Set(wishlistRef.current));
+  }, [router]);
+
+  const toggleWishlist = useCallback((id: string) => {
+    if (wishlistRequests.current.has(id)) return;
+    const wishlisted = !wishlistRef.current.has(id);
+    wishlistRequests.current.add(id);
+    wishlistVersion.current += 1;
+    if (wishlisted) wishlistRef.current.add(id);
+    else wishlistRef.current.delete(id);
+    setWishlist(new Set(wishlistRef.current));
+    setPendingWishlistIds(new Set(wishlistRequests.current));
+
+    void fetch("/api/wishlist", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ itemId: id, wishlisted }),
+    }).then((response) => {
+      if (response.status === 401) router.refresh();
+      if (!response.ok) throw new Error("Wishlist update failed");
+    }).catch(() => {
+      if (wishlisted) wishlistRef.current.delete(id);
+      else wishlistRef.current.add(id);
+      setWishlist(new Set(wishlistRef.current));
+      setToast("Could not update your wishlist");
+    }).finally(() => {
+      wishlistRequests.current.delete(id);
+      wishlistVersion.current += 1;
+      setPendingWishlistIds(new Set(wishlistRequests.current));
+    });
+  }, [router]);
+
   useEffect(() => {
     const refreshWhenVisible = () => {
-      if (document.visibilityState === "visible") void refreshCollection().catch(() => setToast("Could not refresh the collection"));
+      if (document.visibilityState === "visible") {
+        void refreshCollection().catch(() => setToast("Could not refresh the collection"));
+        void refreshWishlist().catch(() => setToast("Could not refresh the wishlist"));
+      }
     };
     window.addEventListener("focus", refreshWhenVisible);
     document.addEventListener("visibilitychange", refreshWhenVisible);
@@ -382,7 +451,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
       window.removeEventListener("focus", refreshWhenVisible);
       document.removeEventListener("visibilitychange", refreshWhenVisible);
     };
-  }, [refreshCollection]);
+  }, [refreshCollection, refreshWishlist]);
 
   useEffect(() => {
     const localOwned = parseOwned(localStorage.getItem(STORAGE_KEY), validIds);
@@ -494,11 +563,12 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
         if (normalizedQuery && !releaseMatches && !indexedRelease?.itemText.get(item.id)?.includes(normalizedQuery)) return false;
         if (ownership === "owned" && !owned.has(item.id)) return false;
         if (ownership === "missing" && owned.has(item.id)) return false;
+        if (ownership === "wishlist" && !wishlist.has(item.id)) return false;
         return true;
       });
       return visibleItems.length ? [{ ...release, visibleItems }] : [];
     });
-  }, [category, normalizedQuery, owned, ownership, releases, searchIndex, tag]);
+  }, [category, normalizedQuery, owned, ownership, releases, searchIndex, tag, wishlist]);
 
   const yearGroups = useMemo(() => {
     const groups = new Map<number | "Date unknown", Array<Release & { visibleItems: CollectibleItem[] }>>();
@@ -589,7 +659,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
         <section id="catalog" className="mx-auto max-w-[1280px] px-5 pb-20 pt-0 md:px-8 md:pb-28">
           <div className="sticky top-16 z-30 -mx-5 mb-14 border-b border-hairline bg-canvas/95 px-5 py-3 backdrop-blur-md md:mx-0 md:px-4">
             <div className="flex items-center gap-2">
-              <div className="relative min-w-0 flex-1 xl:max-w-[360px]">
+              <div className="relative min-w-0 flex-1">
                 <Icon name="search" className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-secondary" />
                 <label htmlFor="collection-search" className="sr-only">Search collection</label>
                 <input
@@ -608,24 +678,17 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
                 type="button"
                 onClick={() => setFiltersOpen((current) => !current)}
                 aria-expanded={filtersOpen}
-                aria-controls="mobile-filters"
-                className={`chunky-button flex h-11 shrink-0 items-center gap-2 px-4 text-[10px] uppercase xl:hidden ${filtersOpen ? "bg-ink text-canvas" : "bg-surface text-ink"}`}
+                aria-controls="catalog-filters"
+                className={`chunky-button flex h-11 shrink-0 items-center gap-2 px-4 text-[10px] uppercase ${filtersOpen ? "bg-ink text-canvas" : "bg-surface text-ink"}`}
               >
                 <Icon name="filter" />
                 {filtersOpen ? "Done" : "Filters"}
                 {!filtersOpen && filterCount > 0 && <span className="grid size-5 place-items-center bg-primary text-[9px] text-on-primary">{filterCount}</span>}
               </button>
 
-              <div className="no-scrollbar ml-auto hidden items-center gap-2 overflow-x-auto xl:flex" aria-label="Catalog filters">
-                {categoryOptions.map((option) => <FilterPill key={option.value} active={category === option.value} onClick={() => setCategory(option.value)}>{option.label}</FilterPill>)}
-                <span className="mx-1 h-7 w-px shrink-0 bg-hairline" aria-hidden="true" />
-                <FilterPill active={tag === "mixed-ip"} onClick={() => setTag((current) => current === "mixed-ip" ? "all" : "mixed-ip")}>Mixed IP</FilterPill>
-                <span className="mx-1 h-7 w-px shrink-0 bg-hairline" aria-hidden="true" />
-                {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
-              </div>
             </div>
 
-            <div id="mobile-filters" className="mobile-filter-panel w-full min-w-0 xl:hidden" data-open={filtersOpen} inert={!filtersOpen} aria-hidden={!filtersOpen}>
+            <div id="catalog-filters" className="mobile-filter-panel w-full min-w-0" data-open={filtersOpen} inert={!filtersOpen} aria-hidden={!filtersOpen}>
               <div className="mobile-filter-panel-inner">
                 <div className="grid min-w-0 gap-5 border-t border-hairline pt-3">
                   <div className="min-w-0">
@@ -642,8 +705,8 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
                     </FilterRail>
                   </div>
                   <div className="min-w-0">
-                    <p className="mb-2 text-[9px] font-bold uppercase text-mute">Ownership</p>
-                    <FilterRail label="Filter by ownership">
+                    <p className="mb-2 text-[9px] font-bold uppercase text-mute">Collection</p>
+                    <FilterRail label="Filter by collection status">
                       {ownershipOptions.map((option) => <FilterPill key={option.value} active={ownership === option.value} onClick={() => setOwnership(option.value)}>{option.label}</FilterPill>)}
                     </FilterRail>
                   </div>
@@ -676,6 +739,8 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
                     visibleItems={release.visibleItems}
                     owned={owned}
                     pendingItemIds={pendingItemIds}
+                    wishlist={wishlist}
+                    pendingWishlistIds={pendingWishlistIds}
                     open={open}
                     filteredOpen={filteredOpen}
                     onToggleOpen={() => setExpanded((current) => {
@@ -685,6 +750,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
                       return next;
                     })}
                     onToggleItem={toggleItem}
+                    onToggleWishlist={toggleWishlist}
                     onClear={() => clearRelease(release)}
                   />;
                 })}
@@ -692,7 +758,7 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
             </section>
           )) : (
             <div className="grid min-h-80 place-items-center border border-hairline p-8 text-center">
-              <div><h2 className="title-text">{ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-on-primary">Clear filters</button></div>
+              <div><h2 className="title-text">{ownership === "wishlist" ? "No wishlist items here." : ownership === "missing" && ownedCount === total ? "Nothing missing." : "Nothing hiding here."}</h2><p className="mt-2 text-xs text-secondary">{ownership === "wishlist" && !wishlist.size ? "Tap the hearts on items to build your wishlist." : ownership === "missing" && ownedCount === total ? "Your museum is complete." : "Try another search or loosen a filter."}</p><button type="button" onClick={clearFilters} className="chunky-button mt-6 h-11 border-primary bg-primary px-5 text-[10px] uppercase text-on-primary">Clear filters</button></div>
             </div>
           )}
         </section>
@@ -718,6 +784,11 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
         </div>}
       </dialog>
 
+      {changelogOpen && <ChangelogModal onDismiss={() => {
+        setChangelogOpen(false);
+        accountButtonRef.current?.focus({ preventScroll: true });
+      }} />}
+
       <div role="status" aria-live="polite" className={`fixed bottom-5 left-1/2 z-50 -translate-x-1/2 bg-ink px-5 py-3 text-xs text-canvas transition-all duration-200 ${toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}>{toast}</div>
 
       <div
@@ -739,18 +810,31 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
       >
         <span
           role="tooltip"
+          className={`pointer-events-none absolute bottom-[216px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "changelog") ? "opacity-100" : "opacity-0"}`}
+        >
+          Changelog
+        </span>
+        <span
+          role="tooltip"
+          className={`pointer-events-none absolute bottom-[168px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "logout") ? "opacity-100" : "opacity-0"}`}
+        >
+          Log out
+        </span>
+        <span
+          role="tooltip"
           className={`pointer-events-none absolute bottom-[120px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "settings") ? "opacity-100" : "opacity-0"}`}
         >
           Settings
         </span>
         <span
           role="tooltip"
-          className={`pointer-events-none absolute bottom-[72px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "logout") ? "opacity-100" : "opacity-0"}`}
+          className={`pointer-events-none absolute bottom-[72px] right-full mr-3 translate-y-1/2 whitespace-nowrap bg-ink px-3 py-2 text-xs text-canvas transition-opacity duration-150 ${accountOpen && (!accountCanHover || hoveredAccountAction === "friends") ? "opacity-100" : "opacity-0"}`}
         >
-          Log out
+          Friends
         </span>
-        <div className={`relative w-12 overflow-hidden rounded-full border border-ink bg-canvas text-ink transition-[height] duration-200 ease-out ${accountOpen ? "h-36" : "h-12"}`}>
+        <div className={`relative w-12 overflow-hidden rounded-full border border-ink bg-canvas text-ink transition-[height] duration-200 ease-out ${accountOpen ? "h-60" : "h-12"}`}>
           <button
+            ref={accountButtonRef}
             type="button"
             onClick={() => { if (!accountCanHover) setAccountOpen((open) => !open); }}
             aria-expanded={accountOpen}
@@ -758,21 +842,27 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
             aria-label={accountOpen ? "Close account actions" : `Open account actions for ${username}`}
             className="absolute inset-x-0 bottom-0 grid h-12 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus"
           >
-            <Icon name="user" className="size-5" />
+            <Avatar path={avatarPath} className={avatarPath ? "size-9" : "size-5"} iconClassName="size-5" />
           </button>
-          <div id="account-actions" aria-hidden={!accountOpen} className={`absolute inset-x-0 bottom-12 flex h-24 flex-col ${accountOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
-            <Link
-              href="/settings"
-              onMouseEnter={() => setHoveredAccountAction("settings")}
+          <div id="account-actions" aria-hidden={!accountOpen} className={`absolute inset-x-0 bottom-12 flex h-48 flex-col ${accountOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+            <button
+              type="button"
+              onClick={() => {
+                setAccountOpen(false);
+                setHoveredAccountAction(null);
+                setChangelogOpen(true);
+              }}
+              onMouseEnter={() => setHoveredAccountAction("changelog")}
               onMouseLeave={() => setHoveredAccountAction(null)}
-              onFocus={() => setHoveredAccountAction("settings")}
+              onFocus={() => setHoveredAccountAction("changelog")}
               onBlur={() => setHoveredAccountAction(null)}
               tabIndex={accountOpen ? 0 : -1}
-              aria-label="Settings"
+              aria-label="Changelog"
+              aria-haspopup="dialog"
               className={`grid h-12 w-full shrink-0 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
             >
-              <Icon name="settings" className="size-5" />
-            </Link>
+              <Icon name="info" className="size-5" />
+            </button>
             <button
               type="button"
               onClick={lockArchive}
@@ -786,6 +876,30 @@ export function CollectionMuseum({ releases, initialOwned, username }: { release
             >
               <Icon name="logout" className="size-5" />
             </button>
+            <Link
+              href="/settings"
+              onMouseEnter={() => setHoveredAccountAction("settings")}
+              onMouseLeave={() => setHoveredAccountAction(null)}
+              onFocus={() => setHoveredAccountAction("settings")}
+              onBlur={() => setHoveredAccountAction(null)}
+              tabIndex={accountOpen ? 0 : -1}
+              aria-label="Settings"
+              className={`grid h-12 w-full shrink-0 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            >
+              <Icon name="settings" className="size-5" />
+            </Link>
+            <Link
+              href="/friends"
+              onMouseEnter={() => setHoveredAccountAction("friends")}
+              onMouseLeave={() => setHoveredAccountAction(null)}
+              onFocus={() => setHoveredAccountAction("friends")}
+              onBlur={() => setHoveredAccountAction(null)}
+              tabIndex={accountOpen ? 0 : -1}
+              aria-label="Friends"
+              className={`grid h-12 w-full shrink-0 place-items-center rounded-full transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-focus ${accountOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+            >
+              <Icon name="friends" className="size-5" />
+            </Link>
           </div>
         </div>
       </div>

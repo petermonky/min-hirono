@@ -46,7 +46,13 @@ Set the same three environment variables in the Next.js hosting provider. Use `h
 
 The app stores each account's progress separately in `collection_items`. Database access stays on the server behind the account login, and every collection query is scoped to the username in the signed session. Successful authentication creates a signed, HTTP-only, SameSite cookie containing the username and expiring after 30 days. Changing `HIRONO_SESSION_SECRET` immediately invalidates existing sessions.
 
+Each item thumbnail has an independent wishlist heart. Wishlists are stored per account in `wishlist_items`, including upcoming items, and do not affect collection ownership or completion counts. Reads and updates use authenticated `/api/wishlist` routes. Apply migration `20261020010000_create_wishlist_items.sql` before deploying the wishlist UI.
+
 Migration `20261012000000_scope_collections_by_account.sql` assigns every collection row that existed before accounts were introduced to `min`. Account credentials live in the private `accounts` table and passwords are stored only as salted bcrypt hashes. The app verifies passwords through a service-role-only database function, so password hashes are never sent to the browser.
+
+Profile pictures use the private `avatars` bucket in the same Supabase project. Settings lets users select a JPEG, PNG, or WebP image up to 10 MB, then drag and zoom a square crop. Only the cropped image is uploaded; the server validates it and saves a 512 × 512 WebP. The `accounts.avatar_path` column identifies the current image, and a successful replacement deletes the previous object. Uploads and image reads use authenticated app routes with the existing server credentials. Signed-in users can view other collectors’ profile pictures on the Friends screen. Original photos are not stored. Apply migration `20261020000000_add_account_avatars.sql` before deploying the avatar UI; no additional environment variables are needed.
+
+The Friends action in the account tray opens `/friends`, an authenticated directory of other accounts, ordered by username. Everyone is connected by default, so new accounts appear automatically without friend requests or a separate friendship table. The directory shows usernames, profile pictures, and collection progress, excluding the current account. Progress counts only items in the current released catalog, matching the main collection; upcoming releases and wishlist entries are excluded.
 
 To add an account in the Supabase SQL editor, run the following with a lowercase username and a private password. Its collection starts empty and remains isolated from every other account:
 
@@ -89,6 +95,12 @@ vercel env add SUPABASE_SECRET_KEY production --sensitive
 ```
 
 Each command prompts for the value without adding it to Git.
+
+## Maintaining the changelog
+
+The tray’s changelog modal reads from `src/data/changelog.ts`. Keep one entry per date, newest first, and group related changes into short feature summaries written for collectors. Add meaningful user-facing features and improvements; leave out account creation, maintenance, internal refactoring, and reverted experiments. The initial history was backfilled from Git author dates, which are not independent deployment records.
+
+Add pending features to an entry with `status: "unreleased"`. When shipping, change it to `"released"` and use the actual release date, merging entries if that date already exists. Review the changelog alongside feature changes so the modal stays current. Historical commit references are kept in code comments for traceability, rather than displayed to users.
 
 ## Database commands
 

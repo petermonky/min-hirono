@@ -60,11 +60,11 @@ export async function getSession() {
 
   const { data, error } = await getSupabaseAdmin()
     .from("accounts")
-    .select("username")
+    .select("username, avatar_path")
     .eq("username", session.username)
     .maybeSingle();
   if (error) throw new Error(`Unable to validate the account: ${error.message}`);
-  return data ? session : null;
+  return data ? { ...session, avatarPath: data.avatar_path as string | null } : null;
 }
 
 export async function verifyCredentials(username: string, password: string) {

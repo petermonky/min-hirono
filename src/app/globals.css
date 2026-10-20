@@ -331,7 +331,25 @@ button:disabled { cursor: default; }
 
 dialog::backdrop { background: rgb(0 0 0 / 58%); }
 
+.changelog-modal[open] { animation: changelog-in 100ms var(--motion-easing) both; }
+.changelog-modal[open]::backdrop { animation: changelog-backdrop-in 100ms ease-out both; }
+.changelog-modal[data-closing="true"] { animation: changelog-out 90ms ease-in both; }
+.changelog-modal[data-closing="true"]::backdrop { animation: changelog-backdrop-out 90ms ease-in both; }
+
+@keyframes changelog-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes changelog-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(4px) scale(0.99); }
+}
+@keyframes changelog-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes changelog-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+
 @media (prefers-reduced-motion: reduce) {
+  .changelog-modal::backdrop { animation-duration: 0.01ms !important; }
+
   *, *::before, *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;

@@ -2,12 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/icon";
+import { Avatar } from "@/components/avatar";
+import { AvatarEditor } from "@/components/avatar-editor";
 
 const MASKED_PASSWORD = "••••••••••••";
 
-export function AccountSettings({ username }: { username: string }) {
+export function AccountSettings({ username, initialAvatarPath }: { username: string; initialAvatarPath: string | null }) {
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPath, setAvatarPath] = useState(initialAvatarPath);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarError, setAvatarError] = useState("");
   const [editing, setEditing] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
@@ -74,9 +82,28 @@ export function AccountSettings({ username }: { username: string }) {
 
         <section className="mx-auto flex w-full max-w-md flex-col items-center pb-10 pt-9 md:pt-12">
           <h1 className="sr-only">Account settings</h1>
-          <div className="grid size-28 place-items-center rounded-full border border-ink" aria-hidden="true">
-            <Icon name="user" className="size-11" />
-          </div>
+          <button type="button" onClick={() => fileInputRef.current?.click()} aria-label="Change profile picture" className="relative rounded-full border border-ink">
+            <Avatar path={avatarPath} className="size-28" iconClassName="size-11" />
+            <span className="absolute -bottom-1 -right-1 grid size-9 place-items-center rounded-full border border-ink bg-ink text-canvas ring-4 ring-canvas" aria-hidden="true">
+              <Icon name="camera" className="size-4" />
+            </span>
+          </button>
+          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" aria-label="Choose profile picture" onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (!file) return;
+            setAvatarError("");
+            if (file.size > 10 * 1024 * 1024) { setAvatarError("Choose an image smaller than 10 MB."); return; }
+            if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) { setAvatarError("Choose a JPEG, PNG, or WebP image."); return; }
+            setAvatarFile(file);
+          }} />
+          {avatarError && <p role="alert" className="mt-3 text-xs text-error">{avatarError}</p>}
+          {avatarFile && <AvatarEditor file={avatarFile} onCancel={() => setAvatarFile(null)} onSaved={(path) => {
+            setAvatarPath(path);
+            setAvatarFile(null);
+            setMessage("Profile picture updated.");
+            router.refresh();
+          }} />}
 
           <dl className="mt-10 w-full border-y border-hairline">
             <div className="flex min-h-14 items-center justify-between gap-6 border-b border-hairline py-3">
