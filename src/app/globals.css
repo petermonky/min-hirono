@@ -279,7 +279,7 @@ button:disabled { cursor: default; }
 }
 
 .progress-track {
-  height: 4px;
+  height: 5px;
   overflow: hidden;
   border: 0;
   border-radius: 0;

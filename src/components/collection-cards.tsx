@@ -186,9 +186,7 @@ export function ReleaseCard(props: ReleaseCardProps) {
           <h3 className="title-text text-pretty">{release.name}</h3>
         </span>
         <span className="col-start-2 self-center md:col-start-3">
-          {props.mode === "readonly" ? (
-            <span className="block text-xs text-secondary">{visibleItems.length} {props.view === "owned" ? "collected" : "on wishlist"}</span>
-          ) : <>
+          {props.mode !== "readonly" && <>
           <span className="mb-3 flex items-end justify-between text-xs">
             <span className="text-secondary">{upcoming ? "Not counted yet" : `${ownedCount} / ${release.items.length} collected`}</span>
             <strong className="font-semibold text-ink">{upcoming ? "—" : complete ? "Complete" : `${percent}%`}</strong>
