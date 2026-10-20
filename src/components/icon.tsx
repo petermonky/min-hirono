@@ -1,4 +1,4 @@
-export type IconName = "search" | "chevron" | "arrow" | "filter" | "x" | "check" | "user" | "friends" | "camera" | "heart" | "info" | "settings" | "logout";
+export type IconName = "search" | "chevron" | "arrow" | "filter" | "x" | "check" | "plus" | "user" | "friends" | "camera" | "heart" | "info" | "settings" | "logout";
 
 export function Icon({ name, className = "size-4" }: { name: IconName; className?: string }) {
   const paths = {
@@ -8,6 +8,7 @@ export function Icon({ name, className = "size-4" }: { name: IconName; className
     filter: <><path d="M4 7h16" /><path d="M7 12h10" /><path d="M10 17h4" /></>,
     x: <><path d="m6 6 12 12" /><path d="m18 6-12 12" /></>,
     check: <path d="m5 12 4 4L19 6" />,
+    plus: <path d="M12 5v14M5 12h14" />,
     info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v6" /><path d="M12 7h.01" /></>,
     heart: <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />,
     user: <><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20c.8-3.7 3-5.5 6.5-5.5s5.7 1.8 6.5 5.5" /></>,

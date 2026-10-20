@@ -3,7 +3,6 @@ import sharp from "sharp";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { areFriends } from "@/lib/friends-store";
 
 export const runtime = "nodejs";
 const MAX_UPLOAD = 1024 * 1024;
@@ -15,7 +14,8 @@ export async function GET(request: Request) {
   const username = new URL(request.url).searchParams.get("username");
   if (username && username !== session.username) {
     if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(username)) return new NextResponse(null, { status: 400 });
-    if (!await areFriends(session.username, username)) return new NextResponse(null, { status: 404 });
+    // Profile photos are discoverable by signed-in users through user search.
+    // Detailed collections still require a mutual friendship.
     const account = await getSupabaseAdmin().from("accounts").select("avatar_path").eq("username", username).maybeSingle();
     if (account.error) return new NextResponse(null, { status: 503 });
     avatarPath = account.data?.avatar_path ?? null;

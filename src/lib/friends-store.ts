@@ -4,6 +4,9 @@ import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { allReleasedItemIds } from "@/lib/catalog";
 
 export type Friend = { username: string; avatar_path: string | null; ownedCount: number };
+export type FriendInvite = Friend & { id: string };
+export type UserSearchResult = Friend & { relationship: "friend" | "incoming" | "outgoing" | "none" };
+export type FriendsDirectoryData = { friends: Friend[]; invitations: FriendInvite[] };
 
 export async function areFriends(username: string, otherUsername: string) {
   if (username === otherUsername) return false;
@@ -14,7 +17,7 @@ export async function areFriends(username: string, otherUsername: string) {
   return Boolean(data);
 }
 
-export async function getFriends(username: string) {
+async function getFriendIds(username: string) {
   const client = getSupabaseAdmin();
   const friendIds: string[] = [];
   const pageSize = 1000;
@@ -26,7 +29,13 @@ export async function getFriends(username: string) {
     friendIds.push(...data.map((edge) => edge.username_a === username ? edge.username_b : edge.username_a));
     if (data.length < pageSize) break;
   }
+  return friendIds;
+}
+
+async function getProfilesWithProgress(friendIds: string[]) {
   if (!friendIds.length) return [];
+  const client = getSupabaseAdmin();
+  const pageSize = 1000;
   const friends: Omit<Friend, "ownedCount">[] = [];
   const counts = new Map<string, number>();
   // Bound query sizes and fetch only connected accounts and their collection rows.
@@ -51,4 +60,49 @@ export async function getFriends(username: string) {
   }
   return friends.sort((a, b) => a.username.localeCompare(b.username))
     .map((friend) => ({ ...friend, ownedCount: counts.get(friend.username) ?? 0 }));
+}
+
+export async function getFriends(username: string) {
+  return getProfilesWithProgress(await getFriendIds(username));
+}
+
+async function getInviteEdges(username: string) {
+  const invitations: Array<{ id: string; sender_username: string; recipient_username: string }> = [];
+  for (let offset = 0; ; offset += 1000) {
+    const { data, error } = await getSupabaseAdmin().from("friend_invites")
+      .select("id, sender_username, recipient_username")
+      .or(`sender_username.eq.${username},recipient_username.eq.${username}`)
+      .order("created_at").order("id").range(offset, offset + 999);
+    if (error) throw new Error(`Unable to load friend invites: ${error.message}`);
+    invitations.push(...data);
+    if (data.length < 1000) return invitations;
+  }
+}
+
+export async function getFriendsDirectory(username: string): Promise<FriendsDirectoryData> {
+  const [friends, edges] = await Promise.all([getFriends(username), getInviteEdges(username)]);
+  const incoming = edges.filter((edge) => edge.recipient_username === username);
+  const profiles = await getProfilesWithProgress(incoming.map((edge) => edge.sender_username));
+  const invitations = incoming.flatMap((edge) => {
+    const profile = profiles.find((person) => person.username === edge.sender_username);
+    return profile ? [{ ...profile, id: edge.id }] : [];
+  });
+  return { friends, invitations };
+}
+
+export async function searchUsers(username: string, query: string): Promise<UserSearchResult[]> {
+  const { data, error } = await getSupabaseAdmin().from("accounts").select("username")
+    .neq("username", username).eq("username", query.trim().toLowerCase()).limit(1);
+  if (error) throw new Error(`Unable to search users: ${error.message}`);
+  if (!data.length) return [];
+  const [profiles, friendIds, invitations] = await Promise.all([
+    getProfilesWithProgress(data.map((person) => person.username)), getFriendIds(username), getInviteEdges(username),
+  ]);
+  const friends = new Set(friendIds);
+  return profiles.map((person) => ({
+    ...person,
+    relationship: friends.has(person.username) ? "friend"
+      : invitations.some((edge) => edge.sender_username === person.username) ? "incoming"
+      : invitations.some((edge) => edge.recipient_username === person.username) ? "outgoing" : "none",
+  }));
 }

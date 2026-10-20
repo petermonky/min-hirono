@@ -13,6 +13,10 @@ export const changelog: ReadonlyArray<ChangelogRelease> = [
     status: "released",
     updates: [
       {
+        title: "Find and invite friends",
+        description: "Search for an exact username in Friends and tap their row to send an invitation. Incoming invites appear above your friends, where you can accept or decline them. Accepting connects both collectors and unlocks collection browsing.",
+      },
+      {
         title: "Meet your fellow collectors",
         description: "Open Friends from the account tray to see your connected friends, with their usernames, profile pictures, and collection progress. Friendships are mutual; new accounts are no longer connected to everyone by default.",
       },
