@@ -14,7 +14,11 @@ export const changelog: ReadonlyArray<ChangelogRelease> = [
     updates: [
       {
         title: "Meet your fellow collectors",
-        description: "Open Friends from the account tray to see everyone on the platform, with their usernames, profile pictures, and collection progress. Everyone is connected by default.",
+        description: "Open Friends from the account tray to see your connected friends, with their usernames, profile pictures, and collection progress. Friendships are mutual; new accounts are no longer connected to everyone by default.",
+      },
+      {
+        title: "Explore a friend’s collection",
+        description: "Click a friend to browse their owned items and wishlist in separate views, with search and filters. Only their saved items appear, and browsing never changes either person’s collection.",
       },
       {
         title: "Your own profile picture",

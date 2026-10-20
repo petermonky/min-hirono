@@ -3,6 +3,7 @@ import sharp from "sharp";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { areFriends } from "@/lib/friends-store";
 
 export const runtime = "nodejs";
 const MAX_UPLOAD = 1024 * 1024;
@@ -13,8 +14,8 @@ export async function GET(request: Request) {
   let avatarPath = session.avatarPath;
   const username = new URL(request.url).searchParams.get("username");
   if (username && username !== session.username) {
-    // All registered accounts are friends. Only signed-in users can view their pictures.
     if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(username)) return new NextResponse(null, { status: 400 });
+    if (!await areFriends(session.username, username)) return new NextResponse(null, { status: 404 });
     const account = await getSupabaseAdmin().from("accounts").select("avatar_path").eq("username", username).maybeSingle();
     if (account.error) return new NextResponse(null, { status: 503 });
     avatarPath = account.data?.avatar_path ?? null;

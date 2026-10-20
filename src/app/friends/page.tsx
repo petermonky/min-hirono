@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "Friends · your hirono" };
 export default async function FriendsPage() {
   const session = await getSession();
   if (!session) redirect("/");
-  const friends = (await getFriends()).filter((friend) => friend.username !== session.username);
+  const friends = await getFriends(session.username);
   const total = allReleasedItemIds.size;
 
   return (
@@ -37,14 +37,17 @@ export default async function FriendsPage() {
 
         <section className="mx-auto w-full max-w-md pt-9 md:pt-12" aria-labelledby="friends-title">
           <h1 id="friends-title" className="display-sm mb-8">Friends</h1>
+          {!friends.length && <p className="border-y border-hairline py-8 text-sm text-secondary">No friends yet.</p>}
           <ul className="divide-y divide-hairline border-y border-hairline">
             {friends.map((friend) => {
               const percent = total ? Math.round(friend.ownedCount / total * 100) : 0;
-              return <li key={friend.username} className="flex items-center gap-4 py-5">
+              return <li key={friend.username}>
+                <Link href={`/friends/${encodeURIComponent(friend.username)}`} aria-label={`View ${friend.username}’s collection`} className="flex items-center gap-4 py-5">
                 <Avatar username={friend.username} path={friend.avatar_path} className="size-12 border border-hairline" iconClassName="size-5" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-4">
                     <span className="min-w-0 break-all text-sm font-semibold">{friend.username}</span>
+                    <Icon name="chevron" className="size-4 shrink-0 -rotate-90 text-mute" />
                   </div>
                   <div className="mb-3 mt-3 flex items-end justify-between gap-3 text-xs tabular-nums">
                     <span className="text-secondary">{friend.ownedCount} / {total} collected</span>
@@ -54,6 +57,7 @@ export default async function FriendsPage() {
                     <div className="progress-fill" style={{ width: `${percent}%` }} />
                   </div>
                 </div>
+                </Link>
               </li>;
             })}
           </ul>
