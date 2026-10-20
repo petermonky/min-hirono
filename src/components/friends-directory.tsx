@@ -12,7 +12,10 @@ function ProfileRow({ person, total, children }: { person: Friend; total: number
   return <div className="flex items-center gap-4 py-5">
     <Avatar username={person.username} path={person.avatar_path} className="size-12 border border-hairline" iconClassName="size-5" />
     <div className="min-w-0 flex-1">
-      <span className="block break-all text-sm font-semibold">{person.username}</span>
+      <div className="flex items-center justify-between gap-4">
+        <span className="min-w-0 break-all text-sm font-semibold">{person.username}</span>
+        <div className="flex h-4 shrink-0 items-center justify-end">{children}</div>
+      </div>
       <div className="mb-3 mt-3 flex items-end justify-between gap-3 text-xs tabular-nums">
         <span className="text-secondary">{person.ownedCount} / {total} collected</span>
         <strong className="font-semibold">{percent}%</strong>
@@ -21,7 +24,6 @@ function ProfileRow({ person, total, children }: { person: Friend; total: number
         <div className="progress-fill" style={{ width: `${percent}%` }} />
       </div>
     </div>
-    <div className="flex w-18 shrink-0 items-center justify-end">{children}</div>
   </div>;
 }
 
@@ -120,7 +122,7 @@ export function FriendsDirectory({ initialData, total }: { initialData: FriendsD
   };
   const results = searchResult.query === normalizedQuery ? searchResult.users : [];
 
-  return <section className="mx-auto w-full max-w-md pt-9 md:pt-12" aria-labelledby="friends-title">
+  return <section className="mx-auto w-full max-w-md pt-4 md:pt-6" aria-labelledby="friends-title">
     <div className="sticky top-16 z-30 -mx-5 bg-canvas/95 px-5 pb-5 pt-3 backdrop-blur-md md:mx-0 md:px-0">
       <h1 id="friends-title" className="display-sm mb-5">Friends</h1>
       <div className="relative">
