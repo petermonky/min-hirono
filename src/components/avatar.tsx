@@ -9,7 +9,7 @@ export function Avatar({ path, username, className, iconClassName }: { path: str
   return (
     <span className={`relative grid shrink-0 place-items-center overflow-hidden rounded-full ${className}`}>
       {path && failedPath !== path ? (
-        <Image src={`/api/account/avatar?v=${encodeURIComponent(path)}${username ? `&username=${encodeURIComponent(username)}` : ""}`} alt="" fill unoptimized className="object-cover" onError={() => setFailedPath(path)} />
+        <Image src={`/api/account/avatar?v=${encodeURIComponent(path)}&username=${encodeURIComponent(username ?? path.split("/")[0])}`} alt="" fill unoptimized className="object-cover" onError={() => setFailedPath(path)} />
       ) : <Icon name="user" className={iconClassName} />}
     </span>
   );
